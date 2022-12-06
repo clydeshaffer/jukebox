@@ -2,8 +2,8 @@
 
 .export ShiftROMBank, Setup_VIA_Port_A, _SwitchRomBank, _banksMirror, Init_RAM_Page_Numbers
 
-.include "../include/regs.inc"
-.include "../include/via.inc"
+.include "regs.inc"
+.include "via.inc"
 
 .segment "RAMPAGEMARK"
 _currentRamBank:
@@ -39,6 +39,10 @@ Setup_VIA_Port_A:
     RTS
 
 ShiftROMBank:
+	CMP _romBankMirror
+	BNE @continue
+	RTS
+@continue:
     STA _romBankMirror
 	STA $0
 	LDA #$FF

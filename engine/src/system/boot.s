@@ -14,7 +14,7 @@
 
 .import ShiftROMBank, Setup_VIA_Port_A, Init_RAM_Page_Numbers, _banksMirror
 
-.include "../include/regs.inc"
+.include "regs.inc"
 
 .PC02
 
@@ -46,7 +46,7 @@ viaWakeup:
     STZ Audio_Rate
     STZ Audio_Reset
 
-	lda #$00
+	lda #$7F
 	jsr ShiftROMBank
 
 ; ---------------------------------------------------------------------------

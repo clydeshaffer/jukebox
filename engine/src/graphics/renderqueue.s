@@ -5,11 +5,11 @@
 .import   _frameflag, _flagsMirror, _frameflip, _banksMirror
 
 .export  _NextQueue, _irq_int_check_render_queue, _pushRect, _render_queue_input, _queue_flags_param, Init_Draw_Queue
-
+.export _queue_pending
 .pc02
 
-.include "../include/regs.inc"
-.include "../include/rect.inc"
+.include "../system/regs.inc"
+.include "rect.inc"
 
 .segment "BSS"
 
@@ -68,6 +68,7 @@ _render_queue_input:
     lda     _banksMirror ;get current banks reg
     tax
     ora     #$40 ;make BANK1 version of same
+    sei
     sta     Bank_Flags ;switch to BANK1
 
 
@@ -100,7 +101,7 @@ _render_queue_input:
 
     ;now finally switch back to BANK0
     stx     Bank_Flags
-
+    cli
     rts
 
 .endproc

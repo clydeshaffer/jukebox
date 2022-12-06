@@ -14,7 +14,7 @@ AFLAGS = --cpu 65C02 --bin-include-dir lib --bin-include-dir $(ODIR)/assets
 LFLAGS = -C gametank-2M.cfg -m $(ODIR)/out.map -vm
 LLIBS = lib/cc65.lib
 
-_AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o
+_AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o game/entity.o
 AOBJS = $(patsubst %,$(ODIR)/%,$(_AOBJS))
 
 _BMPOBJS = hud_graphics.gtg.deflate \
