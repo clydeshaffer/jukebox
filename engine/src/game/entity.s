@@ -31,14 +31,14 @@ EntYOffset:
 
 .proc Draw_All_Entities: near
     LDX #0
-@DrawEntsLoop:
+@Loop:
     CPX EntityCount
     BEQ @Exit
     PHX
     JSR Draw_An_Entity
     PLX
     INX
-    JMP @DrawEntsLoop
+    JMP @Loop
 @Exit:
     RTS
 .endproc
@@ -106,5 +106,25 @@ EntYOffset:
 .endproc
 
 .proc Run_Update_Funcs: near
+LDX #0
+@Loop:
+    CPX EntityCount
+    BEQ @Exit
+    PHX
+    LDA Entities+Entity::Slot, x
+    TAY
+    LDA EntSlots+EntSlot::Updater_LByte, y
+    STA FrameDataPtr
+    LDA EntSlots+EntSlot::Updater_HByte, y
+    STA FrameDataPtr+1
+    LDA EntSlots+EntSlot::Updater_Bank, y
+    JSR ShiftROMBank
+    JSR @RunFunc
+    PLX
+    INX
+    JMP @Loop
+@Exit:
     RTS
+@RunFunc:
+    JMP (FrameDataPtr)
 .endproc

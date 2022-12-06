@@ -1,6 +1,6 @@
 .export _main
 .import _render_queue_input, _queue_flags_param, _NextQueue, _pushRect, Init_Draw_Queue, _frameflip, _flagsMirror
-.import WaitForVSync, Draw_All_Entities, EntSlots, Entities, EntityCount, _queue_pending
+.import WaitForVSync, Draw_All_Entities, EntSlots, Entities, EntityCount, _queue_pending, Run_Update_Funcs
 
 .PC02
 
@@ -20,7 +20,16 @@ TestFrameData:
     .res 256, $86  ;c
     .res 256, $0  ;b
 
+TestUpdateFunc_MoveRight:
+    INC Entities+Entity::vX, x
+    RTS
+
+TestUpdateFunc_MoveDown:
+    INC Entities+Entity::vY, x
+    RTS
+
 .segment "CODE"
+
 _main:
     CLI
     JSR Init_Draw_Queue
@@ -43,6 +52,7 @@ _main:
     ;hardcoded test Entity
     LDA #0
     STA Entities+(Entity::Frame)+1
+    LDA #1
     STA Entities+(Entity::Slot)+1
     STA Entities+(Entity::State)+1
     LDA #30
@@ -61,21 +71,41 @@ _main:
     STA EntSlots+EntSlot::Frame_Tables_HByte
     LDA #127
     STA EntSlots+EntSlot::Frame_Tables_Bank
+    LDA #<TestUpdateFunc_MoveRight
+    STA EntSlots+EntSlot::Updater_LByte
+    LDA #>TestUpdateFunc_MoveRight
+    STA EntSlots+EntSlot::Updater_HByte
+    LDA #127
+    STA EntSlots+EntSlot::Updater_Bank
     LDA #0
     STA EntSlots+EntSlot::GRAM_Bank
     STA EntSlots+EntSlot::Y_Offset
     STA EntSlots+EntSlot::Type
+
+    ;hardcoded test Entity Slot 2
+    LDA #<TestFrameData
+    STA EntSlots+EntSlot::Frame_Tables_LByte+1
+    LDA #>TestFrameData
+    STA EntSlots+EntSlot::Frame_Tables_HByte+1
+    LDA #127
+    STA EntSlots+EntSlot::Frame_Tables_Bank+1
+    LDA #<TestUpdateFunc_MoveDown
+    STA EntSlots+EntSlot::Updater_LByte+1
+    LDA #>TestUpdateFunc_MoveDown
+    STA EntSlots+EntSlot::Updater_HByte+1
+    LDA #127
+    STA EntSlots+EntSlot::Updater_Bank+1
+    LDA #0
+    STA EntSlots+EntSlot::GRAM_Bank+1
+    STA EntSlots+EntSlot::Y_Offset+1
+    STA EntSlots+EntSlot::Type+1
 
     Forever:
     JSR ClearScreen
     JSR Draw_All_Entities
     JSR WaitForVSync
 
-    ;Hardcoded updates
-    INC Entities+Entity::vX
-    INC Entities+Entity::vX+1
-    INC Entities+Entity::vX+1
-    INC Entities+Entity::vY+1
+    JSR Run_Update_Funcs
 
     JMP Forever
 
