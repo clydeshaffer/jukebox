@@ -4,6 +4,6 @@
 
 .zeropage
 args:
-    .res 4
+    .res 8
 tmp_ptr:
     .res 2

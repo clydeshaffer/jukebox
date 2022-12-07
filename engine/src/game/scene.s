@@ -1,6 +1,6 @@
 .export LoadScene
 .import EntityCount, Entities, EntSlots
-.import ShiftROMBank
+.import ShiftROMBank, LoadSpriteSheet
 .importzp args, tmp_ptr
 
 .include "scene.inc"
@@ -58,6 +58,7 @@
     LDA args+2
     JSR ShiftROMBank
     JSR LoadEntities
+    JSR DoSpriteLoads
     RTS
 .endproc
 
@@ -111,5 +112,43 @@
     LOAD_ENT HP
     LOAD_ENT State
 
+    RTS
+.endproc
+
+.proc DoSpriteLoads: near
+    LDA args
+    PHA
+    LDA args+1
+    PHA
+    LDY #SceneHeader::SpriteLoadCount
+    LDA (args), y
+    STA args+4
+    LDY #SceneHeader::SpriteLoadListBank
+    LDA (args), y
+    STA args+3
+    LDY #SceneHeader::SpriteLoadList
+    LDA (args), y
+    TAX
+    INY
+    LDA (args), y
+    STA args+1
+    STX args
+    LDA args+3
+    JSR ShiftROMBank
+@Loop:
+    JSR LoadSpriteSheet
+    CLC
+    LDA args
+    ADC #.sizeof(SpriteLoadCommand)
+    STA args
+    LDA args+1
+    ADC #0
+    STA args+1
+    DEC args+4
+    BNE @Loop
+    PLA
+    STA args+1
+    PLA
+    STA args+1
     RTS
 .endproc

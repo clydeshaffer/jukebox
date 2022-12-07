@@ -11,8 +11,8 @@ TestFrameData:
     .res 256, $0 ;y
     .res 256, $10 ;w
     .res 256, $10 ;h
-    .res 256, $0  ;gx
-    .res 256, $0  ;gy
+    .res 256, $20  ;gx
+    .res 256, $90  ;gy
     .res 256, $86  ;c
     .res 256, $0  ;b
 
@@ -63,6 +63,17 @@ InitialEnts:
     .res MAX_ENTITIES, 100 ; HP
     .res MAX_ENTITIES, 0 ; state
 
+InitialSpriteLoad:
+    .word SpriteSheet ;Sheet Ptr
+    .byte $FE ;Sheet Bank
+    .byte 0 ;GRAM Bank
+    .byte 0 ; Y_Offset
+    ;;;;;Second sprite sheet
+    .word SpriteSheet ;Sheet Ptr
+    .byte $FE ;Sheet Bank
+    .byte 0 ;GRAM Bank
+    .byte 128 ; Y_Offset
+
 InitialSceneHeader:
     .byte $2 ;EntSlotCount
     .word InitialSlots ;EntSlots
@@ -70,5 +81,11 @@ InitialSceneHeader:
     .byte $2 ;EntityCount
     .word InitialEnts
     .byte $FE ;EntityListBank
+    .byte $2 ;SpriteLoadCount
+    .word InitialSpriteLoad ;SpriteLoadPtr
+    .byte $1 ;SpriteLoadBank
+    
 
-
+SpriteSheet:
+    .incbin "gamesprites.gtg.deflate"
+    

@@ -15,7 +15,7 @@ LFLAGS = -C gametank-2M.cfg -m $(ODIR)/out.map -vm
 LLIBS = lib/cc65.lib
 
 _AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o system/args.o \
-	graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o \
+	graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o graphics/loader.o \
 	game/entity.o game/scene.o \
 	testdata/testdata.o
 AOBJS = $(patsubst %,$(ODIR)/%,$(_AOBJS))
