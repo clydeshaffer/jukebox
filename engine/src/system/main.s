@@ -1,6 +1,9 @@
 .export _main
 .import _render_queue_input, _queue_flags_param, _NextQueue, _pushRect, Init_Draw_Queue, _frameflip, _flagsMirror
 .import WaitForVSync, Draw_All_Entities, EntSlots, Entities, EntityCount, _queue_pending, Run_Update_Funcs
+.import LoadScene
+.importzp args
+.import InitialSceneHeader
 
 .PC02
 
@@ -8,25 +11,6 @@
 .include "regs.inc"
 .include "../graphics/colors.inc"
 .include "../game/entity.inc"
-
-.segment "RODATA"
-TestFrameData:
-    .res 256, $0 ;x
-    .res 256, $0 ;y
-    .res 256, $10 ;w
-    .res 256, $10 ;h
-    .res 256, $0  ;gx
-    .res 256, $0  ;gy
-    .res 256, $86  ;c
-    .res 256, $0  ;b
-
-TestUpdateFunc_MoveRight:
-    INC Entities+Entity::vX, x
-    RTS
-
-TestUpdateFunc_MoveDown:
-    INC Entities+Entity::vY, x
-    RTS
 
 .segment "CODE"
 
@@ -38,67 +22,13 @@ _main:
     STA _flagsMirror
 	STA DMA_Flags
 
-    ;hardcoded test Entity
-    LDA #0
-    STA Entities+Entity::Frame
-    STA Entities+Entity::Slot
-    STA Entities+Entity::State
-    LDA #10
-    STA Entities+Entity::vX
-    STA Entities+Entity::vY
-    LDA #100
-    STA Entities+Entity::HP
-
-    ;hardcoded test Entity
-    LDA #0
-    STA Entities+(Entity::Frame)+1
-    LDA #1
-    STA Entities+(Entity::Slot)+1
-    STA Entities+(Entity::State)+1
-    LDA #30
-    STA Entities+(Entity::vX)+1
-    STA Entities+(Entity::vY)+1
-    LDA #100
-    STA Entities+(Entity::HP)+1
-
-    LDA #2
-    STA EntityCount
-
-    ;hardcoded test Entity Slot
-    LDA #<TestFrameData
-    STA EntSlots+EntSlot::Frame_Tables_LByte
-    LDA #>TestFrameData
-    STA EntSlots+EntSlot::Frame_Tables_HByte
+    LDA #<InitialSceneHeader
+    STA args
+    LDA #>InitialSceneHeader
+    STA args+1
     LDA #127
-    STA EntSlots+EntSlot::Frame_Tables_Bank
-    LDA #<TestUpdateFunc_MoveRight
-    STA EntSlots+EntSlot::Updater_LByte
-    LDA #>TestUpdateFunc_MoveRight
-    STA EntSlots+EntSlot::Updater_HByte
-    LDA #127
-    STA EntSlots+EntSlot::Updater_Bank
-    LDA #0
-    STA EntSlots+EntSlot::GRAM_Bank
-    STA EntSlots+EntSlot::Y_Offset
-    STA EntSlots+EntSlot::Type
-
-    ;hardcoded test Entity Slot 2
-    LDA #<TestFrameData
-    STA EntSlots+EntSlot::Frame_Tables_LByte+1
-    LDA #>TestFrameData
-    STA EntSlots+EntSlot::Frame_Tables_HByte+1
-    LDA #127
-    STA EntSlots+EntSlot::Frame_Tables_Bank+1
-    LDA #<TestUpdateFunc_MoveDown
-    STA EntSlots+EntSlot::Updater_LByte+1
-    LDA #>TestUpdateFunc_MoveDown
-    STA EntSlots+EntSlot::Updater_HByte+1
-    LDA #127
-    STA EntSlots+EntSlot::Updater_Bank+1
-    LDA #0
-    STA EntSlots+EntSlot::GRAM_Bank+1
-    STA EntSlots+EntSlot::Y_Offset+1
-    STA EntSlots+EntSlot::Type+1
+    STA args+2
+    JSR LoadScene
 
     Forever:
     JSR ClearScreen

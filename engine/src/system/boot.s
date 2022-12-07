@@ -13,6 +13,7 @@
 .import    copydata, zerobss, initlib, donelib
 
 .import ShiftROMBank, Setup_VIA_Port_A, Init_RAM_Page_Numbers, _banksMirror
+.import _romBankMirror
 
 .include "regs.inc"
 
@@ -46,8 +47,24 @@ viaWakeup:
     STZ Audio_Rate
     STZ Audio_Reset
 
-	lda #$7F
+    STZ _romBankMirror
+	lda #$7E
 	jsr ShiftROMBank
+
+; ---------------------------------------------------------------------------
+; Set cc65 argument stack pointer
+
+          LDA     #<(__RAM0_START__ + __RAM0_SIZE__)
+          STA     sp
+          LDA     #>(__RAM0_START__ + __RAM0_SIZE__)
+          STA     sp+1
+
+; ---------------------------------------------------------------------------
+; Initialize memory storage
+
+          JSR     zerobss              ; Clear BSS segment
+          JSR     copydata             ; Initialize DATA segment
+          JSR     initlib              ; Run constructors
 
 ; ---------------------------------------------------------------------------
 ; Call main()

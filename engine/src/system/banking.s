@@ -1,21 +1,26 @@
 .PC02
 
 .export ShiftROMBank, Setup_VIA_Port_A, _SwitchRomBank, _banksMirror, Init_RAM_Page_Numbers
+.export _romBankMirror
 
 .include "regs.inc"
 .include "via.inc"
 
 .segment "RAMPAGEMARK"
 _currentRamBank:
-    .res    1,$00
+    .res    1
 
 .segment    "BSS"
 _romBankMirror:
-	.res	1,$00
+	.res	1
 _banksMirror:
-    .res    1,$00
+    .res    1
 _bankFlip:
-	.res	1,$00
+	.res	1
+
+.segment "ZEROPAGE"
+tmp:
+	.res 1
 
 .segment    "CODE"
 
@@ -44,11 +49,11 @@ ShiftROMBank:
 	RTS
 @continue:
     STA _romBankMirror
-	STA $0
+	STA tmp
 	LDA #$FF
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	ROR
 	ROR
 	ROR
@@ -60,7 +65,7 @@ ShiftROMBank:
 	ORA #1
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	ROR
 	ROR
 	ROR
@@ -71,7 +76,7 @@ ShiftROMBank:
 	ORA #1
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	ROR
 	ROR
 	ROR
@@ -81,7 +86,7 @@ ShiftROMBank:
 	ORA #1
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	ROR
 	ROR
 	AND #2
@@ -90,7 +95,7 @@ ShiftROMBank:
 	ORA #1
 	STA VIA::ORA
 	
-	LDA $0
+	LDA tmp
 	ROR
 	AND #2
 	ORA #%00000100
@@ -98,14 +103,14 @@ ShiftROMBank:
 	ORA #1
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	AND #2
 	ORA #%00000100
 	STA VIA::ORA
 	ORA #1
 	STA VIA::ORA
 
-	LDA $0
+	LDA tmp
 	ROL
 	AND #2
 	STA VIA::ORA
