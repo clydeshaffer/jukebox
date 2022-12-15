@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>841</width>
+    <height>481</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Jukebox Creator</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>5</number>
+      </property>
+      <widget class="QWidget" name="tab_project">
+       <attribute name="title">
+        <string>Project</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_scene">
+       <attribute name="title">
+        <string>Scene</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2"/>
+      </widget>
+      <widget class="QWidget" name="tab_sprites">
+       <attribute name="title">
+        <string>Sprites</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_behaviors">
+       <attribute name="title">
+        <string>Behaviors</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_music">
+       <attribute name="title">
+        <string>Music</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_scripts">
+       <attribute name="title">
+        <string>Scripts</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>841</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
