@@ -2,7 +2,7 @@
 .struct SpriteLoadCommand
 SheetPtr .word
 SheetBank .byte
-GRAMBank .byte
+GRAMBank .byte ;;TODO encode bank and Xoffset
 Y_Offset .byte
 .endstruct
 

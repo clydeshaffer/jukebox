@@ -1,5 +1,6 @@
 .export _main
 .import _render_queue_input, _queue_flags_param, _NextQueue, _pushRect, Init_Draw_Queue, _frameflip, _flagsMirror
+.import bankFlip, _romBankMirror
 .import WaitForVSync, Draw_All_Entities, EntSlots, Entities, EntityCount, _queue_pending, Run_Update_Funcs
 .import LoadScene
 .importzp args
@@ -22,11 +23,16 @@ _main:
     STA _flagsMirror
 	STA DMA_Flags
 
+    LDA #VRAMBANK2
+    STA bankFlip
+    STA _romBankMirror
+    STA Bank_Flags
+
     LDA #<InitialSceneHeader
     STA args
     LDA #>InitialSceneHeader
     STA args+1
-    LDA #127
+    LDA #255
     STA args+2
     JSR LoadScene
 
@@ -34,6 +40,18 @@ _main:
     JSR ClearScreen
     JSR Draw_All_Entities
     JSR WaitForVSync
+
+    LDA _frameflip
+    EOR #VFLAG_VID_OUT_PAGE2
+    STA _frameflip
+    ORA #(VFLAG_VNMI | VFLAG_DMA | VFLAG_BLIT_IRQ)
+    STA DMA_Flags
+
+    LDA bankFlip
+    EOR #VRAMBANK2
+    STA bankFlip
+    STA _romBankMirror
+    STA Bank_Flags
 
     JSR Run_Update_Funcs
 
@@ -53,7 +71,7 @@ ClearScreen:
     LDA #(SAT_NONE | 2)
 	EOR #$FF
     STA _render_queue_input+Rect::color
-    LDA #0
+    LDA bankFlip
     STA _render_queue_input+Rect::bank
     LDA #(VFLAG_COLORFILL | VFLAG_OPAQUE)
     STA _queue_flags_param

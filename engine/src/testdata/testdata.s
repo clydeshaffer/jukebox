@@ -37,7 +37,7 @@ InitialSlots:
     .byte <TestUpdateFunc_MoveRight ;Updater L
     .res ENTITY_SLOTS-2, 0
     
-    .res ENTITY_SLOTS, 127 ; Updater bank
+    .res ENTITY_SLOTS, 255 ; Updater bank
 
     .byte >TestFrameData; FrameTables H
     .byte >TestFrameData; FrameTables H
@@ -47,7 +47,7 @@ InitialSlots:
     .byte <TestFrameData; FrameTables L
     .res ENTITY_SLOTS-2, 0
 
-    .res ENTITY_SLOTS, 127 ; FrameTables bank
+    .res ENTITY_SLOTS, 255 ; FrameTables bank
 InitialEnts:
 
     .byte 24
@@ -65,25 +65,25 @@ InitialEnts:
 
 InitialSpriteLoad:
     .word SpriteSheet ;Sheet Ptr
-    .byte $FE ;Sheet Bank
+    .byte $FF ;Sheet Bank
     .byte 0 ;GRAM Bank
     .byte 0 ; Y_Offset
     ;;;;;Second sprite sheet
     .word SpriteSheet ;Sheet Ptr
-    .byte $FE ;Sheet Bank
+    .byte $FF ;Sheet Bank
     .byte 0 ;GRAM Bank
     .byte 128 ; Y_Offset
 
 InitialSceneHeader:
     .byte $2 ;EntSlotCount
     .word InitialSlots ;EntSlots
-    .byte $FE ;EntSlotsBank
+    .byte $FF ;EntSlotsBank
     .byte $2 ;EntityCount
     .word InitialEnts
-    .byte $FE ;EntityListBank
+    .byte $FF ;EntityListBank
     .byte $2 ;SpriteLoadCount
     .word InitialSpriteLoad ;SpriteLoadPtr
-    .byte $1 ;SpriteLoadBank
+    .byte $FF ;SpriteLoadBank
     
 
 SpriteSheet:

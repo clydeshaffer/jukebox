@@ -1,7 +1,7 @@
 .PC02
 
 .export ShiftROMBank, Setup_VIA_Port_A, _SwitchRomBank, _banksMirror, Init_RAM_Page_Numbers
-.export _romBankMirror
+.export _romBankMirror, bankFlip
 
 .include "regs.inc"
 .include "via.inc"
@@ -15,7 +15,7 @@ _romBankMirror:
 	.res	1
 _banksMirror:
     .res    1
-_bankFlip:
+bankFlip:
 	.res	1
 
 .segment "ZEROPAGE"
@@ -51,6 +51,19 @@ ShiftROMBank:
     STA _romBankMirror
 	STA tmp
 	LDA #$FF
+	STA VIA::ORA
+
+	LDA tmp
+	ROR
+	ROR
+	ROR
+	ROR
+	ROR
+	ROR
+	AND #2
+	ORA #%00000100
+	STA VIA::ORA
+	ORA #1
 	STA VIA::ORA
 
 	LDA tmp

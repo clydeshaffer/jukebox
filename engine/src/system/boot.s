@@ -48,7 +48,7 @@ viaWakeup:
     STZ Audio_Reset
 
     STZ _romBankMirror
-	lda #$7E
+	lda #$FF
 	jsr ShiftROMBank
 
 ; ---------------------------------------------------------------------------

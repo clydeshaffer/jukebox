@@ -1,7 +1,7 @@
 .PC02
 
 .import _pushRect, _render_queue_input, _queue_pending, _NextQueue, _queue_flags_param
-.import ShiftROMBank
+.import ShiftROMBank, bankFlip
 .export EntityCount, Entities, EntSlots
 .export Draw_All_Entities, FrameDataPtr, Run_Update_Funcs
 
@@ -92,6 +92,7 @@ EntYOffset:
     STA _render_queue_input+Rect::color
 
     LDA EntGRAMBank
+    ORA bankFlip
     STA _render_queue_input+Rect::bank
 
     LDA #0
