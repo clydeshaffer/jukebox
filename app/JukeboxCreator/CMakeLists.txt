@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        gtproject.h gtproject.cpp
+        gtscene.h gtscene.cpp
         ${TS_FILES}
 )
 
