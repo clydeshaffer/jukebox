@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         jsonbase.h jsonbase.cpp
         jsonmacros.h
         editorsession.h editorsession.cpp
+        splashdialog.h splashdialog.cpp splashdialog.ui
+        whereami.h whereami.cpp
         ${TS_FILES}
 )
 

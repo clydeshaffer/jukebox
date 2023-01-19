@@ -1,14 +1,13 @@
 #include "mainwindow.h"
 #include "gtproject.h"
-#include "gtscene.h"
-#include "gtsprite.h"
+#include "splashdialog.h"
+#include "whereami.h"
 
-#include <QFileDialog>
-#include <QInputDialog>
-#include <QMessageBox>
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QDebug>
+
 
 int main(int argc, char *argv[])
 {
@@ -24,32 +23,33 @@ int main(int argc, char *argv[])
         }
     }
 
-    path projectDir;
+    int length = wai_getExecutablePath(nullptr, 0, nullptr);
+    char* exePath = (char*)malloc(length + 1);
+    wai_getExecutablePath(exePath, length, nullptr);
+    exePath[length] = '\0';
+
+    EditorSession lastEditorSession;
+    path sessionPath = path(exePath).parent_path() / path("session.json");
+    if(exists(sessionPath)) {
+        lastEditorSession.DeserializeFromFile(sessionPath.string());
+    } else {
+        lastEditorSession.SerializeToFile(sessionPath.string());
+    }
     GTProject myProject;
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(nullptr, "CREATE NEW PROJECT?", "YES = create, NO = load", QMessageBox::Yes | QMessageBox::No);
-    if(reply == QMessageBox::Yes) {
-        //create
-        path projectParentDir = path(QFileDialog::getExistingDirectory(nullptr, "Choose location for project", "~").toStdString());
-        QString projectName = QInputDialog::getText(nullptr, "Creating project", "Project name:");
-        projectDir = projectParentDir / path(projectName.toStdString());
-        myProject.scenes.push_back(GTScene());
-        myProject.name = projectName.toStdString();
-        myProject.projectRoot = projectDir;
 
-        filesystem::create_directory(projectDir);
-        filesystem::create_directory(projectDir / path("sprites"));
-        myProject.Save();
+    SplashDialog splashScreen(lastEditorSession, myProject, nullptr);
+    if(splashScreen.exec() == QDialog::Accepted) {
+
+        lastEditorSession.UpdateRecentProjects(myProject.projectRoot);
+        lastEditorSession.SerializeToFile(sessionPath.string());
+
+        MainWindow w(myProject, nullptr);
+        w.show();
+        return a.exec();
     } else {
-        //load
-        path mainProjectJson = path(QFileDialog::getOpenFileName(nullptr, "Open project", "~", "Main project file (*.json)").toStdString());
-        projectDir = mainProjectJson.parent_path();
-        myProject.projectRoot = projectDir;
-        myProject.DeserializeFromFile(mainProjectJson.string());
+        a.quit();
+        return a.exec();
     }
 
-    MainWindow w(myProject, nullptr);
-    w.show();
-    return a.exec();
 }
