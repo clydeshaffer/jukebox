@@ -9,6 +9,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include("${CMAKE_SOURCE_DIR}/vendor/rapidjson.cmake")
+
+include_directories(${RAPIDJSON_INCLUDE_DIR})
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
@@ -21,6 +25,12 @@ set(PROJECT_SOURCES
         mainwindow.ui
         gtproject.h gtproject.cpp
         gtscene.h gtscene.cpp
+        gtsprite.h gtsprite.cpp
+        gtentityslot.h gtentityslot.cpp
+        gtentity.h gtentity.cpp
+        jsonbase.h jsonbase.cpp
+        jsonmacros.h
+        editorsession.h editorsession.cpp
         ${TS_FILES}
 )
 
@@ -50,6 +60,8 @@ else()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
+
+add_dependencies(JukeboxCreator rapidjson)
 
 target_link_libraries(JukeboxCreator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 

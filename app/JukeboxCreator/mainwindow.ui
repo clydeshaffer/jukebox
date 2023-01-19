@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1103</width>
-    <height>632</height>
+    <width>1188</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,12 +27,30 @@
     </item>
     <item row="0" column="1">
      <widget class="QGraphicsView" name="graphicsView">
+      <property name="minimumSize">
+       <size>
+        <width>640</width>
+        <height>640</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>640</width>
+        <height>640</height>
+       </size>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
       <property name="sceneRect">
        <rectf>
-        <x>0.000000000000000</x>
-        <y>0.000000000000000</y>
-        <width>200.000000000000000</width>
-        <height>200.000000000000000</height>
+        <x>-64.000000000000000</x>
+        <y>-64.000000000000000</y>
+        <width>640.000000000000000</width>
+        <height>640.000000000000000</height>
        </rectf>
       </property>
       <property name="alignment">
@@ -49,17 +67,17 @@
        </size>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="ent_field_x">
-         <property name="maximum">
-          <number>256</number>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
           <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="ent_field_x">
+         <property name="maximum">
+          <number>256</number>
          </property>
         </widget>
        </item>
@@ -84,10 +102,10 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>HP</string>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="ent_field_frame">
+         <property name="maximum">
+          <number>0</number>
          </property>
         </widget>
        </item>
@@ -98,14 +116,19 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="ent_field_frame"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="ent_field_slot"/>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>HP</string>
+         </property>
+        </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QSpinBox" name="ent_field_hp"/>
+        <widget class="QSpinBox" name="ent_field_hp">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_6">
@@ -115,7 +138,11 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QSpinBox" name="ent_field_state"/>
+        <widget class="QSpinBox" name="ent_field_state">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
        </item>
        <item row="6" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox">
@@ -131,7 +158,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="slot_field_type"/>
+           <widget class="QSpinBox" name="slot_field_type">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_8">
@@ -163,6 +194,9 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="ent_field_slot"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -173,8 +207,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1103</width>
-     <height>21</height>
+     <width>1188</width>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -183,6 +217,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="actionImport_Sprite"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -195,6 +230,11 @@
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionImport_Sprite">
+   <property name="text">
+    <string>Import Sprite</string>
    </property>
   </action>
  </widget>

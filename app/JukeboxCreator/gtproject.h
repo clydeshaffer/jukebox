@@ -1,11 +1,29 @@
 #ifndef GTPROJECT_H
 #define GTPROJECT_H
 
+#include <filesystem>
+#include <vector>
+#include "gtscene.h"
+#include "gtsprite.h"
+#include "jsonbase.h"
 
-class GTProject
+using namespace std;
+using namespace filesystem;
+
+class GTProject : public JSONBase
 {
 public:
     GTProject();
+
+    virtual bool Deserialize(const rapidjson::Value& obj);
+    virtual bool Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const;
+
+    string name;
+    std::vector<GTSprite> sprites;
+    std::vector<GTScene> scenes;
+
+    path projectRoot;
+    void Save();
 };
 
 #endif // GTPROJECT_H

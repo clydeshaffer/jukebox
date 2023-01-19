@@ -1,20 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "qgraphicsscene.h"
+#include <QGraphicsScene>
 #include <QMainWindow>
 
-#pragma pack(push, r1, 1)
-struct GTFrame {
-    signed char x, y;
-    unsigned char width, height, gx, gy, color, bank;
-};
-
-struct GTEntity {
-    unsigned char vx, vy, frame, slot, hp, state;
-};
-
-#pragma pack(pop, r1);
+#include "gtproject.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,23 +15,28 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(GTProject& project, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void on_actionOpen_triggered();
     void item_selection_changed();
     void item_properties_edited();
+    void slot_properties_edited();
 
     void on_pushButton_clicked();
+
+    void on_actionSave_triggered();
+
+    void on_actionImport_Sprite_triggered();
 
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";
-    QGraphicsScene *scene;
-    QPixmap *sheetPixmap;
-    std::vector<GTFrame> frames;
-    std::vector<QPixmap> framePixmaps;
-    std::vector<GTEntity> entities;
+    QGraphicsScene *graphicsScene;
+    GTProject& loadedProject;
+    GTScene& currentScene;
+    void AddEntityToView(GTEntity &ent, int index);
+    void UpdateEntityView(GTEntity &ent);
 };
 #endif // MAINWINDOW_H
