@@ -12,7 +12,7 @@ void GTSprite::loadFramesFromGSI(path framesFile)
     GTFrame tempFrame;
     while (framesFileStream.read(reinterpret_cast<char*>(&tempFrame), sizeof(GTFrame))) {
         frames.push_back(tempFrame);
-        framePixmaps.push_back(sheetPixmap->copy(tempFrame.gx, tempFrame.gy, tempFrame.width, tempFrame.height));
+        framePixmaps.push_back(sheetPixmap_rgb->copy(tempFrame.gx, tempFrame.gy, tempFrame.width, tempFrame.height));
     }
 }
 
@@ -35,7 +35,7 @@ void GTSprite::loadFramesFromJSON(path framesFile)
         tempFrame.gx = (*itr)["frame"].GetObject()["x"].GetInt(),
         tempFrame.gy = (*itr)["frame"].GetObject()["y"].GetInt();
         frames.push_back(tempFrame);
-        framePixmaps.push_back(sheetPixmap->copy(tempFrame.gx, tempFrame.gy, tempFrame.width, tempFrame.height));
+        framePixmaps.push_back(sheetPixmap_rgb->copy(tempFrame.gx, tempFrame.gy, tempFrame.width, tempFrame.height));
     }
 }
 
@@ -59,6 +59,9 @@ GTSprite::GTSprite(string name, path imgFile, unsigned char tileSize): name(name
 void GTSprite::InitImageData(path root)
 {
     sheetPixmap = new QPixmap((root / imgFile).string().c_str(), "BMP", Qt::ImageConversionFlag::NoFormatConversion);
+    sheetImage_rgb = new QImage((root / imgFile).string().c_str());
+    sheetPixmap_rgb = new QPixmap();
+    sheetPixmap_rgb->convertFromImage(*sheetImage_rgb);
 
     if(hasFrames) {
         path fullFramesPath = root / framesFile;
@@ -71,7 +74,7 @@ void GTSprite::InitImageData(path root)
     } else {
         for(unsigned char y = 0; y < sheetPixmap->height(); y += tileSize) {
             for(unsigned char x = 0; x < sheetPixmap->width(); x += tileSize) {
-                framePixmaps.push_back(sheetPixmap->copy(x, y, tileSize, tileSize));
+                framePixmaps.push_back(sheetPixmap_rgb->copy(x, y, tileSize, tileSize));
                 frames.push_back((GTFrame){0, 0, tileSize, tileSize, x, y, 0, 0});
             }
         }
