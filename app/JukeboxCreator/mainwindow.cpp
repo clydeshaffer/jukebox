@@ -104,13 +104,21 @@ void MainWindow::on_actionImport_Sprite_triggered()
         framesFileName = path(QFileDialog::getOpenFileName(this, tr("Open framedata"), "~", tr("Aesprite JSON (*.json);;Game Sprite Info (*.gsi)")).toStdString());
         importedFramesPath =loadedProject.projectRoot / path("sprites") / framesFileName.filename();
     }
-    filesystem::copy_file(framesFileName, importedFramesPath);
 
-    loadedProject.sprites.push_back(
-        GTSprite(spriteName,
-                 filesystem::proximate(path(importedSpritePath), loadedProject.projectRoot),
-                  filesystem::proximate(path(importedFramesPath), loadedProject.projectRoot))
-    );
+    if(exists(framesFileName)) {
+        filesystem::copy_file(framesFileName, importedFramesPath);
+
+        loadedProject.sprites.push_back(
+            GTSprite(spriteName,
+                     filesystem::proximate(path(importedSpritePath), loadedProject.projectRoot),
+                      filesystem::proximate(path(importedFramesPath), loadedProject.projectRoot))
+        );
+    } else {
+        loadedProject.sprites.push_back(
+                    GTSprite(spriteName,
+                             filesystem::proximate(path(importedSpritePath), loadedProject.projectRoot),
+                              16));
+    }
     loadedProject.sprites.back().InitImageData(loadedProject.projectRoot);
 
     QMessageBox::StandardButton slotReply;
