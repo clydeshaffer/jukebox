@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <zlib.h>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include "gtsprite.h"
@@ -57,7 +58,7 @@ GTSprite::GTSprite(string name, path imgFile, unsigned char tileSize): name(name
 
 void GTSprite::InitImageData(path root)
 {
-    sheetPixmap = new QPixmap((root / imgFile).string().c_str());
+    sheetPixmap = new QPixmap((root / imgFile).string().c_str(), "BMP", Qt::ImageConversionFlag::NoFormatConversion);
 
     if(hasFrames) {
         path fullFramesPath = root / framesFile;
@@ -86,6 +87,7 @@ bool GTSprite::Deserialize(const rapidjson::Value& obj)
     if(hasFrames) {
         JSON_READ_PATH(framesFile);
     }
+    return true;
 }
 
 bool GTSprite::Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const
@@ -119,4 +121,46 @@ const GTFrame& GTSprite::getFrameInfo(int frameNum)
 int GTSprite::frameCount()
 {
     return framePixmaps.size();
+}
+
+QByteArray GTSprite::getCompressedSheet()
+{
+    QByteArray rawPixels = QByteArray(sheetPixmap->width() * sheetPixmap->height(), 0);
+    QImage asImage = sheetPixmap->toImage();
+    int i = 0;
+    for(int r = 0; r < sheetPixmap->height(); ++r) {
+        for(int c = 0; c < sheetPixmap->width(); ++c) {
+            rawPixels[i++] = asImage.pixelIndex(c, r);
+        }
+    }
+    QByteArray compressed = qCompress(rawPixels, 9);
+    compressed.remove(0, 6);
+    compressed.chop(4);
+    return compressed;
+}
+
+#define SoA_Frames_Count 256
+struct SoA_Frames
+{
+    signed char x[SoA_Frames_Count], y[SoA_Frames_Count];
+    unsigned char width[SoA_Frames_Count], height[SoA_Frames_Count], gx[SoA_Frames_Count], gy[SoA_Frames_Count], color[SoA_Frames_Count], bank[SoA_Frames_Count];
+};
+
+QByteArray GTSprite::getRomFrames()
+{
+    SoA_Frames frames_pack;
+    for(int i = 0; i < frameCount(); ++i) {
+        frames_pack.x[i] = frames[i].x;
+        frames_pack.y[i] = frames[i].y;
+        frames_pack.width[i] = frames[i].width;
+        frames_pack.height[i] = frames[i].height;
+        frames_pack.gx[i] = frames[i].gx;
+        frames_pack.gy[i] = frames[i].gy;
+        frames_pack.color[i] = frames[i].color;
+        frames_pack.bank[i] = frames[i].bank;
+    }
+
+    QByteArray ret;
+    ret.append((char*) &frames_pack, sizeof(SoA_Frames));
+    return ret;
 }

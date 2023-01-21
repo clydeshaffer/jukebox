@@ -25,16 +25,17 @@ _main:
 
     LDA #VRAMBANK2
     STA bankFlip
-    STA _romBankMirror
     STA Bank_Flags
 
-    LDA #<InitialSceneHeader
+    SEI
+    LDA #$00
     STA args
-    LDA #>InitialSceneHeader
+    LDA #$80
     STA args+1
-    LDA #255
+    LDA #$80
     STA args+2
     JSR LoadScene
+    CLI
 
     Forever:
     JSR ClearScreen

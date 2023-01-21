@@ -30,15 +30,3 @@ bool GTEntity::Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) con
     writer->EndObject();
     return true;
 }
-
-GTEntity_Struct GTEntity::ToEngineStruct()
-{
-    GTEntity_Struct s;
-    s.vx = (unsigned char) vx;
-    s.vy = (unsigned char) vy;
-    s.frame = (unsigned char) frame;
-    s.slot = (unsigned char) slot;
-    s.hp = (unsigned char) hp;
-    s.state = (unsigned char) state;
-    return s;
-}

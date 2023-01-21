@@ -218,6 +218,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionImport_Sprite"/>
+    <addaction name="actionBuild_ROM"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -235,6 +236,11 @@
   <action name="actionImport_Sprite">
    <property name="text">
     <string>Import Sprite</string>
+   </property>
+  </action>
+  <action name="actionBuild_ROM">
+   <property name="text">
+    <string>Build ROM</string>
    </property>
   </action>
  </widget>

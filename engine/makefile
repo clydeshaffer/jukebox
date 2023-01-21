@@ -51,6 +51,8 @@ BANKS = $(patsubst %,bin/engine.gtr.%,$(_BANKS))
  $(BANKS): $(AOBJS) $(LLIBS) gametank-2M.cfg
 	mkdir -p $(@D)
 	$(LN) $(LFLAGS) $(AOBJS) $(COBJS) -o bin/core.gtr $(LLIBS)
+	mkdir -p binclude
+	xxd -i bin/core.gtr.bankFF > binclude/engine_core.h
 
 $(ODIR)/assets.o: src/assets.s $(BMPOBJS) $(SPRITEMETA) $(AUDIO_FW) $(MUSIC)
 	mkdir -p $(@D)

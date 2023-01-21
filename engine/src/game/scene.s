@@ -133,9 +133,9 @@
     LDA (args), y
     STA args+1
     STX args
+@Loop:
     LDA args+3
     JSR ShiftROMBank
-@Loop:
     JSR LoadSpriteSheet
     CLC
     LDA args
@@ -146,6 +146,8 @@
     STA args+1
     DEC args+4
     BNE @Loop
+    LDA args+3
+    JSR ShiftROMBank
     PLA
     STA args+1
     PLA

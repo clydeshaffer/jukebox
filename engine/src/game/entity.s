@@ -95,7 +95,7 @@ EntYOffset:
     ORA bankFlip
     STA _render_queue_input+Rect::bank
 
-    LDA #0
+    LDA #VFLAG_NOTILE
     STA _queue_flags_param
     
     JSR _pushRect

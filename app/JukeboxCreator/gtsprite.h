@@ -32,6 +32,9 @@ public:
 
     QPixmap& getFrame(int frameNum);
     const GTFrame& getFrameInfo(int frameNum);
+    QByteArray getCompressedSheet();
+    QByteArray getRomFrames();
+
     int frameCount();
     string name;
 private:

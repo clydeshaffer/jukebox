@@ -30,6 +30,8 @@ private slots:
 
     void on_actionImport_Sprite_triggered();
 
+    void on_actionBuild_ROM_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";

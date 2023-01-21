@@ -12,6 +12,7 @@
 #include "gtsprite.h"
 #include "gtscene.h"
 #include "gtentityslot.h"
+#include "romserializer.h"
 
 QString makeSlotLabel(int slotIndex, string slotName) {
     return QString("%1: %2").arg(QString::number(slotIndex), slotName.c_str());
@@ -267,3 +268,9 @@ void MainWindow::on_pushButton_clicked()
 
     AddEntityToView(currentScene.entities.back(), currentScene.entities.size() - 1);
 }
+
+void MainWindow::on_actionBuild_ROM_triggered()
+{
+    RomSerializer rs(loadedProject);
+}
+

@@ -33,6 +33,7 @@ set(PROJECT_SOURCES
         editorsession.h editorsession.cpp
         splashdialog.h splashdialog.cpp splashdialog.ui
         whereami.h whereami.cpp
+        romserializer.h romserializer.cpp
         ${TS_FILES}
 )
 
@@ -64,6 +65,8 @@ else()
 endif()
 
 add_dependencies(JukeboxCreator rapidjson)
+
+target_include_directories(JukeboxCreator PRIVATE ${PROJECT_SOURCE_DIR}/../../engine/binclude)
 
 target_link_libraries(JukeboxCreator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 

@@ -5,24 +5,18 @@
 .import Entities
 .include "../game/entity.inc"
 
-.segment "RODATA"
-TestFrameData:
-    .res 256, $0 ;x
-    .res 256, $0 ;y
-    .res 256, $10 ;w
-    .res 256, $10 ;h
-    .res 256, $20  ;gx
-    .res 256, $90  ;gy
-    .res 256, $86  ;c
-    .res 256, $0  ;b
+.segment "SCENE0"
 
-TestUpdateFunc_MoveRight:
-    INC Entities+Entity::vX, x
-    RTS
-
-TestUpdateFunc_MoveDown:
-    INC Entities+Entity::vY, x
-    RTS
+InitialSceneHeader:
+    .byte $2 ;EntSlotCount
+    .word InitialSlots ;EntSlots
+    .byte $FF ;EntSlotsBank
+    .byte $2 ;EntityCount
+    .word InitialEnts
+    .byte $FF ;EntityListBank
+    .byte $2 ;SpriteLoadCount
+    .word InitialSpriteLoad ;SpriteLoadPtr
+    .byte $FF ;SpriteLoadBank
 
 InitialSlots:
     .res ENTITY_SLOTS, 0 ;type
@@ -74,17 +68,23 @@ InitialSpriteLoad:
     .byte 0 ;GRAM Bank
     .byte 128 ; Y_Offset
 
-InitialSceneHeader:
-    .byte $2 ;EntSlotCount
-    .word InitialSlots ;EntSlots
-    .byte $FF ;EntSlotsBank
-    .byte $2 ;EntityCount
-    .word InitialEnts
-    .byte $FF ;EntityListBank
-    .byte $2 ;SpriteLoadCount
-    .word InitialSpriteLoad ;SpriteLoadPtr
-    .byte $FF ;SpriteLoadBank
-    
+TestFrameData:
+    .res 256, $0 ;x
+    .res 256, $0 ;y
+    .res 256, $10 ;w
+    .res 256, $10 ;h
+    .res 256, $20  ;gx
+    .res 256, $90  ;gy
+    .res 256, $86  ;c
+    .res 256, $0  ;b
+
+TestUpdateFunc_MoveRight:
+    INC Entities+Entity::vX, x
+    RTS
+
+TestUpdateFunc_MoveDown:
+    INC Entities+Entity::vY, x
+    RTS
 
 SpriteSheet:
     .incbin "gamesprites.gtg.deflate"

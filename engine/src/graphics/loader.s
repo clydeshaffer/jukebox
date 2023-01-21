@@ -1,7 +1,7 @@
 
 .PC02
 
-.import _inflatemem, ShiftROMBank
+.import _inflatemem, ShiftROMBank, _banksMirror
 .importzp sp, args, tmp_ptr
 .export LoadSpriteSheet
 
@@ -50,6 +50,16 @@
     INY
     LDA (args), y
     STA tmp_ptr+1
+
+    LDA _banksMirror
+    AND #$F8
+    STA _banksMirror
+    LDY #SpriteLoadCommand::GRAMBank
+    LDA (args), y
+    AND #$07
+    ORA _banksMirror
+    STA _banksMirror
+    STA Bank_Flags
 
     LDY #SpriteLoadCommand::SheetBank
     LDA (args), y
