@@ -60,6 +60,17 @@ void GTSprite::InitImageData(path root)
 {
     sheetPixmap = new QPixmap((root / imgFile).string().c_str(), "BMP", Qt::ImageConversionFlag::NoFormatConversion);
     sheetImage_rgb = new QImage((root / imgFile).string().c_str());
+    sheetImage_alpha = new QImage(sheetImage_rgb->width(), sheetImage_rgb->height(), QImage::Format_Mono);
+    sheetImage_alpha->fill(0);
+
+    for(unsigned char y = 0; y < sheetPixmap->height(); ++y) {
+        for(unsigned char x = 0; x < sheetPixmap->width(); ++x) {
+            sheetImage_alpha->setPixel(x, y, sheetImage_rgb->pixelIndex(x, y) != 0);
+        }
+    }
+
+    sheetImage_rgb->setAlphaChannel(*sheetImage_alpha);
+
     sheetPixmap_rgb = new QPixmap();
     sheetPixmap_rgb->convertFromImage(*sheetImage_rgb);
 

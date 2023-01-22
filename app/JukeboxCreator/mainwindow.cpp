@@ -29,7 +29,8 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
     graphicsScene = new QGraphicsScene(this);
     ui->graphicsView->setScene(graphicsScene);
 
-    graphicsScene->addRect(0, 0, 128*4, 128*4);
+    QBrush bgRectBrush(QColor(63, 63, 63));
+    graphicsScene->addRect(0, 0, 128*4, 128*4, QPen(), bgRectBrush);
 
     QObject::connect(ui->graphicsView->scene(), &QGraphicsScene::selectionChanged, this, &MainWindow::item_selection_changed);
     QObject::connect(ui->graphicsView->scene(), &QGraphicsScene::changed, this, &MainWindow::item_selection_changed);

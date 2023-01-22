@@ -17,6 +17,7 @@ bool EditorSession::Deserialize(const rapidjson::Value& obj)
     for(auto& elem : projArr) {
         recentProjectPaths.push_back(std::filesystem::path(elem.GetString()));
     }
+    return true;
 }
 
 bool EditorSession::Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const
@@ -33,6 +34,7 @@ bool EditorSession::Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer
     writer->EndArray();
 
     writer->EndObject();
+    return true;
 }
 
 void EditorSession::UpdateRecentProjects(std::filesystem::path opened) {

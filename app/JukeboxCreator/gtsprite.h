@@ -46,6 +46,7 @@ private:
     vector<QPixmap> framePixmaps;
     QPixmap *sheetPixmap;
     QImage *sheetImage_rgb;
+    QImage *sheetImage_alpha;
     QPixmap *sheetPixmap_rgb;
     void loadFramesFromGSI(path framesFile);
     void loadFramesFromJSON(path framesFile);

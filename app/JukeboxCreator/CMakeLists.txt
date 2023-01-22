@@ -66,6 +66,11 @@ endif()
 
 add_dependencies(JukeboxCreator rapidjson)
 
+add_custom_command(
+    TARGET JukeboxCreator POST_BUILD
+    COMMAND ${QT_WINDEPLOYQT_EXECUTABLE}
+)
+
 target_include_directories(JukeboxCreator PRIVATE ${PROJECT_SOURCE_DIR}/../../engine/binclude)
 
 target_link_libraries(JukeboxCreator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
