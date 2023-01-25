@@ -32,6 +32,10 @@ private slots:
 
     void on_actionBuild_ROM_triggered();
 
+    void on_contextmenu_create();
+    void on_contextmenu_clone();
+    void on_contextmenu_delete();
+
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";

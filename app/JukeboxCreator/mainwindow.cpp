@@ -45,6 +45,10 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
     //QObject::connect(ui->slot_field_updater_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
     //QObject::connect(ui->slot_field_type, &QSpinBox::valueChanged, this, &MainWindow::slot_properties_edited);
 
+    QObject::connect(ui->graphicsView->createAction, &QAction::triggered, this, &MainWindow::on_contextmenu_create);
+    QObject::connect(ui->graphicsView->cloneAction, &QAction::triggered, this, &MainWindow::on_contextmenu_clone);
+    QObject::connect(ui->graphicsView->deleteAction, &QAction::triggered, this, &MainWindow::on_contextmenu_delete);
+
     int spriteIndex = 0;
     int slotIndex = 0;
     for(auto sprite_itr = loadedProject.sprites.begin(); sprite_itr != loadedProject.sprites.end(); ++sprite_itr) {
@@ -151,6 +155,8 @@ void MainWindow::item_selection_changed()
         QGraphicsItem *selection = ui->graphicsView->scene()->selectedItems()[0];
         selectedEnt.vx = selection->x() / 4;
         selectedEnt.vy = selection->y() / 4;
+        selection->setX(selectedEnt.vx * 4);
+        selection->setY(selectedEnt.vy * 4);
 
         ui->ent_field_x->blockSignals(true);
         ui->ent_field_y->blockSignals(true);
@@ -283,3 +289,50 @@ void MainWindow::on_actionBuild_ROM_triggered()
     RomSerializer rs(loadedProject);
 }
 
+void MainWindow::on_contextmenu_create()
+{
+    QPointF newEntPoint = ui->graphicsView->mapToScene(ui->graphicsView->getContextMenuPos());
+    GTEntity ent;
+    ent.vx = newEntPoint.x() / 4;
+    ent.vy = newEntPoint.y() / 4;
+    ent.frame = 0;
+    ent.slot = 0;
+    ent.state = 0;
+    currentScene.entities.push_back(ent);
+
+    AddEntityToView(currentScene.entities.back(), currentScene.entities.size() - 1);
+}
+
+void MainWindow::on_contextmenu_clone()
+{
+    if(ui->graphicsView->scene()->selectedItems().length() == 1) {
+        int entIndex = ui->graphicsView->scene()->selectedItems()[0]->data(0).toInt();
+        GTEntity &selectedEnt = currentScene.entities[entIndex];
+
+        GTEntity newEnt;
+        newEnt.vx = selectedEnt.vx + 1;
+        newEnt.vy = selectedEnt.vy + 1;
+        newEnt.frame = selectedEnt.frame;
+        newEnt.slot = selectedEnt.slot;
+        newEnt.state = selectedEnt.slot;
+        currentScene.entities.push_back(newEnt);
+
+        AddEntityToView(currentScene.entities.back(), currentScene.entities.size()-1);
+    }
+}
+
+void MainWindow::on_contextmenu_delete()
+{
+    if(ui->graphicsView->scene()->selectedItems().length() == 1) {
+        int entIndex = ui->graphicsView->scene()->selectedItems()[0]->data(0).toInt();
+        GTEntity &selectedEnt = currentScene.entities[entIndex];
+
+        //TODO separate into removeByIndex function
+        ui->graphicsView->scene()->removeItem(selectedEnt.pixItem);
+        currentScene.entities.erase(currentScene.entities.begin()+entIndex);
+        for(int i = 0; i < currentScene.entities.size(); ++i)
+        {
+            currentScene.entities[i].pixItem->setData(0, QVariant(i));
+        }
+    }
+}
