@@ -53,6 +53,7 @@ BANKS = $(patsubst %,bin/engine.gtr.%,$(_BANKS))
 	$(LN) $(LFLAGS) $(AOBJS) $(COBJS) -o bin/core.gtr $(LLIBS)
 	mkdir -p binclude
 	xxd -i bin/core.gtr.bankFF > binclude/engine_core.h
+	node scripts/gen_engine_offsets.h build/out.map > binclude/core_symbols.h
 
 $(ODIR)/assets.o: src/assets.s $(BMPOBJS) $(SPRITEMETA) $(AUDIO_FW) $(MUSIC)
 	mkdir -p $(@D)
