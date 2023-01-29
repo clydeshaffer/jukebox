@@ -17,6 +17,8 @@ public:
 
     int behavior_id = 0;
     GTBehavior *behavior;
+
+    unsigned char type = 0;
 };
 
 #endif // GTENTITYSLOT_H

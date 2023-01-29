@@ -36,6 +36,8 @@ private slots:
     void on_contextmenu_clone();
     void on_contextmenu_delete();
 
+    void on_actionManage_Behaviors_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString currentFile = "";

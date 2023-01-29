@@ -1,5 +1,6 @@
 #include <fstream>
 #include <string>
+#include "gtproject.h"
 #include "gtbehavior.h"
 #include "jsonmacros.h"
 
@@ -54,7 +55,10 @@ GTBehavior::GTBehavior()
 
 GTBehavior::GTBehavior(std::string name, std::filesystem::path source) : name(name), source(source)
 {
-
+    if(GTProject::loadedProject != nullptr) {
+        string paramsSection = readParamsSection(GTProject::loadedProject->projectRoot / source);
+        params = parseParamsSection(paramsSection);
+    }
 }
 
 bool GTBehavior::Deserialize(const rapidjson::Value& obj)

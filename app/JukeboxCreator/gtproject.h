@@ -26,6 +26,9 @@ public:
 
     path projectRoot;
     void Save();
+    void EnsureSubdirs();
+
+    static GTProject* loadedProject;
 };
 
 #endif // GTPROJECT_H

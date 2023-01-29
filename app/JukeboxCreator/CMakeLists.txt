@@ -37,6 +37,7 @@ set(PROJECT_SOURCES
         romserializer.h romserializer.cpp
         sceneeditorview.h sceneeditorview.cpp
         behaviorcompiler.h behaviorcompiler.cpp
+        behaviormanagerdialog.h behaviormanagerdialog.cpp behaviormanagerdialog.ui
         ${TS_FILES}
 )
 

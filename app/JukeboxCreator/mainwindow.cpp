@@ -14,6 +14,8 @@
 #include "gtentityslot.h"
 #include "romserializer.h"
 
+#include "behaviormanagerdialog.h"
+
 QString makeSlotLabel(int slotIndex, string slotName) {
     return QString("%1: %2").arg(QString::number(slotIndex), slotName.c_str());
 }
@@ -42,19 +44,28 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
     QObject::connect(ui->ent_field_state, &QSpinBox::valueChanged, this, &MainWindow::item_properties_edited);
 
     QObject::connect(ui->slot_field_sprite_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
-    //QObject::connect(ui->slot_field_updater_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
-    //QObject::connect(ui->slot_field_type, &QSpinBox::valueChanged, this, &MainWindow::slot_properties_edited);
+    QObject::connect(ui->slot_field_updater_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
+    QObject::connect(ui->slot_field_type, &QSpinBox::valueChanged, this, &MainWindow::slot_properties_edited);
 
     QObject::connect(ui->graphicsView->createAction, &QAction::triggered, this, &MainWindow::on_contextmenu_create);
     QObject::connect(ui->graphicsView->cloneAction, &QAction::triggered, this, &MainWindow::on_contextmenu_clone);
     QObject::connect(ui->graphicsView->deleteAction, &QAction::triggered, this, &MainWindow::on_contextmenu_delete);
 
     int spriteIndex = 0;
+    int behaviorIndex = 0;
     int slotIndex = 0;
     for(auto sprite_itr = loadedProject.sprites.begin(); sprite_itr != loadedProject.sprites.end(); ++sprite_itr) {
         ui->slot_field_sprite_combobox->addItem(QString::fromStdString((*sprite_itr).name), QVariant::fromValue(spriteIndex));
         ++spriteIndex;
     }
+
+
+    ui->slot_field_updater_combobox->addItem("(none)", QVariant::fromValue(-1));
+    for(auto& behavior : loadedProject.behaviors) {
+        ui->slot_field_updater_combobox->addItem(QString::fromStdString(behavior.name), QVariant::fromValue(behaviorIndex));
+        ++behaviorIndex;
+    }
+
     for(auto slot_itr = currentScene.entitySlots.begin(); slot_itr != currentScene.entitySlots.end(); ++slot_itr) {
         spriteIndex = 0;
         for(auto sprite_itr = loadedProject.sprites.begin(); sprite_itr != loadedProject.sprites.end(); ++sprite_itr) {
@@ -64,6 +75,13 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
             }
             ++spriteIndex;
         }
+
+        if(slot_itr->behavior_id != -1) {
+            slot_itr->behavior = &(loadedProject.behaviors[slot_itr->behavior_id]);
+        } else {
+            slot_itr->behavior = nullptr;
+        }
+
         ui->ent_field_slot->addItem(makeSlotLabel(slotIndex, (*slot_itr).sprite_name), QVariant::fromValue(slotIndex));
 
         ++slotIndex;
@@ -165,6 +183,10 @@ void MainWindow::item_selection_changed()
         ui->ent_field_slot->blockSignals(true);
         ui->ent_field_state->blockSignals(true);
 
+        ui->slot_field_sprite_combobox->blockSignals(true);
+        ui->slot_field_updater_combobox->blockSignals(true);
+        ui->slot_field_type->blockSignals(true);
+
         ui->ent_field_frame->setMaximum(loadedProject.sprites[currentScene.entitySlots[selectedEnt.slot].sprite_id].frameCount());
 
         ui->ent_field_x->setValue(selectedEnt.vx);
@@ -175,6 +197,8 @@ void MainWindow::item_selection_changed()
         ui->ent_field_state->setValue(selectedEnt.state);
 
         ui->slot_field_sprite_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].sprite_id);
+        ui->slot_field_updater_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].behavior_id + 1); //+1 because the first item NOP is id -1
+        ui->slot_field_type->setValue(currentScene.entitySlots[selectedEnt.slot].type);
 
         ui->ent_field_x->blockSignals(false);
         ui->ent_field_y->blockSignals(false);
@@ -182,6 +206,10 @@ void MainWindow::item_selection_changed()
         ui->ent_field_frame->blockSignals(false);
         ui->ent_field_slot->blockSignals(false);
         ui->ent_field_state->blockSignals(false);
+
+        ui->slot_field_sprite_combobox->blockSignals(false);
+        ui->slot_field_updater_combobox->blockSignals(false);
+        ui->slot_field_type->blockSignals(false);
     } else {
         ui->ent_field_x->setEnabled(false);
         ui->ent_field_y->setEnabled(false);
@@ -238,6 +266,15 @@ void MainWindow::slot_properties_edited()
         selectedSlot.sprite_id = ui->slot_field_sprite_combobox->currentIndex();
         selectedSlot.sprite_name = loadedProject.sprites[selectedSlot.sprite_id].name;
         ui->ent_field_slot->setItemText(changedSlot, makeSlotLabel(changedSlot, currentScene.entitySlots[changedSlot].sprite_name));
+
+        selectedSlot.behavior_id = ui->slot_field_updater_combobox->currentIndex()-1;
+        if(selectedSlot.behavior_id == -1) {
+            selectedSlot.behavior = nullptr;
+        } else {
+            selectedSlot.behavior = &loadedProject.behaviors[selectedSlot.behavior_id];
+        }
+
+        selectedSlot.type = ui->slot_field_type->value();
 
         for(auto& ent : currentScene.entities) {
             if(ent.slot == changedSlot) {
@@ -336,3 +373,10 @@ void MainWindow::on_contextmenu_delete()
         }
     }
 }
+
+void MainWindow::on_actionManage_Behaviors_triggered()
+{
+    BehaviorManagerDialog bmd(loadedProject);
+    bmd.exec();
+}
+

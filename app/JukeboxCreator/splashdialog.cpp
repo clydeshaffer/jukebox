@@ -33,7 +33,7 @@ void SplashDialog::on_button_create_clicked()
     myProject.projectRoot = projectDir;
 
     filesystem::create_directory(projectDir);
-    filesystem::create_directory(projectDir / path("sprites"));
+    myProject.EnsureSubdirs();
     myProject.Save();
     accept();
 }
@@ -48,6 +48,7 @@ void SplashDialog::on_button_browse_clicked()
     projectDir = mainProjectJson.parent_path();
     myProject.projectRoot = projectDir;
     myProject.DeserializeFromFile(mainProjectJson.string());
+    myProject.EnsureSubdirs();
     accept();
 }
 
@@ -65,6 +66,7 @@ void SplashDialog::on_recentProjectsList_itemDoubleClicked(QListWidgetItem *item
     projectDir = mainProjectJson.parent_path();
     myProject.projectRoot = projectDir;
     myProject.DeserializeFromFile(mainProjectJson.string());
+    myProject.EnsureSubdirs();
     accept();
 }
 

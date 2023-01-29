@@ -1,6 +1,8 @@
 #include "gtproject.h"
 #include "jsonmacros.h"
 
+GTProject* GTProject::loadedProject = nullptr;
+
 GTProject::GTProject()
 {
 
@@ -9,6 +11,8 @@ GTProject::GTProject()
 bool GTProject::Deserialize(const rapidjson::Value& obj)
 {
     homeDir = projectRoot;
+    loadedProject = this;
+
     JSON_READ(String, name);
 
     auto spritesJSONArray = obj["sprites"].GetArray();
@@ -68,4 +72,17 @@ void GTProject::Save()
 {
    path mainProjectJson = projectRoot / path("project.json");
    SerializeToFile(mainProjectJson.string());
+}
+
+void GTProject::EnsureSubdirs()
+{
+    path sub = projectRoot / path("sprites");
+    if(!exists(sub)) {
+        create_directory(sub);
+    }
+
+    sub = projectRoot / path("behaviors");
+    if(!exists(sub)) {
+        create_directory(sub);
+    }
 }

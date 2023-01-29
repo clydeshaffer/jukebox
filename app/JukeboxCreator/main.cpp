@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
         lastEditorSession.SerializeToFile(sessionPath.string());
 
         MainWindow w(myProject, nullptr);
+
         w.show();
         return a.exec();
     } else {
