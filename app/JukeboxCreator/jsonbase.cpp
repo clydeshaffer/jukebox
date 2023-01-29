@@ -6,7 +6,9 @@
 #include "JSONBase.h"
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
+std::filesystem::path JSONBase::homeDir;
 
 std::string JSONBase::Serialize() const
 {

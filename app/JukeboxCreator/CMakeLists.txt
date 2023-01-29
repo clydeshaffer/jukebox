@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
         gtsprite.h gtsprite.cpp
         gtentityslot.h gtentityslot.cpp
         gtentity.h gtentity.cpp
+        gtbehavior.h gtbehavior.cpp
         jsonbase.h jsonbase.cpp
         jsonmacros.h
         editorsession.h editorsession.cpp
@@ -35,6 +36,7 @@ set(PROJECT_SOURCES
         whereami.h whereami.cpp
         romserializer.h romserializer.cpp
         sceneeditorview.h sceneeditorview.cpp
+        behaviorcompiler.h behaviorcompiler.cpp
         ${TS_FILES}
 )
 

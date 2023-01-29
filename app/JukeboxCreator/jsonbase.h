@@ -5,6 +5,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
+#include <filesystem>
 
 class JSONBase
 {
@@ -16,6 +17,8 @@ public:
     virtual bool Deserialize(const std::string& s);
     virtual bool Deserialize(const rapidjson::Value& obj) = 0;
     virtual bool Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const = 0;
+
+    static std::filesystem::path homeDir;
 protected:
     bool InitDocument(const std::string & s, rapidjson::Document &doc);
 };

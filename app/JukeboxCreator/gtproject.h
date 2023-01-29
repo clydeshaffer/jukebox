@@ -5,6 +5,7 @@
 #include <vector>
 #include "gtscene.h"
 #include "gtsprite.h"
+#include "gtbehavior.h"
 #include "jsonbase.h"
 
 using namespace std;
@@ -21,6 +22,7 @@ public:
     string name;
     std::vector<GTSprite> sprites;
     std::vector<GTScene> scenes;
+    std::vector<GTBehavior> behaviors;
 
     path projectRoot;
     void Save();
