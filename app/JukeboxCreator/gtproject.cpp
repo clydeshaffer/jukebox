@@ -85,4 +85,9 @@ void GTProject::EnsureSubdirs()
     if(!exists(sub)) {
         create_directory(sub);
     }
+
+    sub = projectRoot / path("build");
+    if(!exists(sub)) {
+        create_directory(sub);
+    }
 }

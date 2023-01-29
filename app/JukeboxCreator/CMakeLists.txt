@@ -75,6 +75,30 @@ add_custom_command(
     COMMAND ${QT_WINDEPLOYQT_EXECUTABLE}
 )
 
+add_custom_command(
+    TARGET JukeboxCreator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/../../kit $<TARGET_FILE_DIR:JukeboxCreator>/kit
+)
+
+add_custom_command(
+    TARGET JukeboxCreator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/../../lib/cc65/bin $<TARGET_FILE_DIR:JukeboxCreator>/lib
+)
+
+add_custom_command(
+    TARGET JukeboxCreator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/../../engine/binclude $<TARGET_FILE_DIR:JukeboxCreator>/lib
+)
+
+add_custom_command(
+    TARGET JukeboxCreator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resource $<TARGET_FILE_DIR:JukeboxCreator>/resource
+)
+
 target_include_directories(JukeboxCreator PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(JukeboxCreator PRIVATE ${PROJECT_SOURCE_DIR}/../../engine/binclude)
 

@@ -7,6 +7,8 @@
 
 #include <engine_core.h>
 
+#include "behaviorcompiler.h"
+
 std::string uint8_t_to_hex(uint8_t x) {
     std::stringstream stream;
     stream << std::uppercase << std::setfill('0') << std::setw(2) << std::hex << (int)x;
@@ -109,6 +111,21 @@ RomSerializer::RomSerializer(GTProject& myProject)
         ++sprite_index;
     }
 
+    BehaviorCompiler::PrepareToBuild();
+    for(auto& behavior : myProject.behaviors) {
+        behavior.Compile();
+    }
+    --sprites_bank;
+    uint8_t behaviors_bank = sprites_bank;
+    BehaviorCompiler::RunLinker();
+    map<string, int> behaviorsMap = BehaviorCompiler::ParseMap();
+    bank_used[behaviors_bank] = true;
+
+    QFile behaviors_bin(BehaviorCompiler::GetBinPath().string().c_str());
+    behaviors_bin.open(QIODevice::ReadOnly);
+    banks[behaviors_bank] = behaviors_bin.readAll();
+    behaviors_bin.close();
+
     uint8_t gram_banks_by_sprite[myProject.sprites.size()];
     for(GTScene& scene : myProject.scenes) {
         uint16_t data_offset = 0x8000;
@@ -147,9 +164,16 @@ RomSerializer::RomSerializer(GTProject& myProject)
             scene_slots.frame_table_bank[slot_index] = frame_data_banks[entslot.sprite_id];
 
             //TEMPORARY SET ALL UPDATERS TO NO-OP
-            scene_slots.updater_addr_msb[slot_index] = 0x80;
-            scene_slots.updater_addr_lsb[slot_index] = sizeof(scene_header); //assuming RTS placed right after scene header
-            scene_slots.updater_bank[slot_index] = 0x80;
+            if(entslot.behavior_id == -1) {
+                scene_slots.updater_addr_msb[slot_index] = 0x80;
+                scene_slots.updater_addr_lsb[slot_index] = sizeof(scene_header); //assuming RTS placed right after scene header
+                scene_slots.updater_bank[slot_index] = 0x80;
+            } else {
+                uint16_t updater_addr = behaviorsMap[entslot.behavior->GenName()];
+                scene_slots.updater_addr_msb[slot_index] = (updater_addr & 0xFF00) >> 8;
+                scene_slots.updater_addr_lsb[slot_index] = updater_addr & 0x00FF;
+                scene_slots.updater_bank[slot_index] = behaviors_bank;
+            }
 
             ++slot_index;
         }

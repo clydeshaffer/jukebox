@@ -14,10 +14,12 @@ public:
     virtual bool Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const;
 
     std::string name;
+    std::string GenName();
     std::filesystem::path source;
     std::map<std::string, int> params;
 
     std::string GetCode(std::filesystem::path root);
+    bool Compile();
 
 private:
     std::string ParamDefineSection;

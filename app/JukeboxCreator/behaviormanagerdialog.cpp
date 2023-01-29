@@ -1,6 +1,7 @@
 #include "behaviormanagerdialog.h"
 #include "ui_behaviormanagerdialog.h"
 #include <QFileDialog>
+#include "whereami.h"
 
 BehaviorManagerDialog::BehaviorManagerDialog(GTProject& project, QWidget *parent) :
     QDialog(parent),
@@ -54,7 +55,17 @@ void BehaviorManagerDialog::on_listWidget_itemSelectionChanged()
 
 void BehaviorManagerDialog::on_AddBehaviorButton_clicked()
 {
-    path behaviorFileName = path(QFileDialog::getOpenFileName(this, tr("Add Behavior"), "~", tr("6502 assembly file (*.asm)")).toStdString());
+    int length = wai_getExecutablePath(nullptr, 0, nullptr);
+    char* exePath = (char*)malloc(length + 1);
+    wai_getExecutablePath(exePath, length, nullptr);
+    exePath[length] = '\0';
+    path exe(exePath);
+
+    QString pathQStr = QFileDialog::getOpenFileName(this, tr("Add Behavior"), (exe.parent_path() / path("kit/behaviors")).string().c_str(), tr("6502 assembly file (*.asm)"));
+    if(pathQStr.isEmpty()) {
+        return;
+    }
+    path behaviorFileName = path(pathQStr.toStdString());
     string defaultName = path(behaviorFileName).filename().replace_extension("").string();
 
     path importedBehaviorPath = project.projectRoot / path("behaviors") / behaviorFileName.filename();

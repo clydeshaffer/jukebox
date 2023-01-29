@@ -3,14 +3,18 @@ x_increment = 1
 y_increment = 0
 ;PARAMS END
 
-simple_move:
-    lda ENTITIES::X, x
+.include "engine.inc"
+
+.export UPDATE_START
+
+UPDATE_START:
+    lda ENTITIES::vX, x
     clc
     adc #x_increment
-    sta ENTITIES::X, x
+    sta ENTITIES::vX, x
 
-    lda ENTITIES::Y, x
+    lda ENTITIES::vY, x
     clc
     adc #y_increment
-    sta ENTITIES::Y, x
+    sta ENTITIES::vY, x
     rts
