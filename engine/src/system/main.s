@@ -3,6 +3,7 @@
 .import bankFlip, _romBankMirror
 .import WaitForVSync, Draw_All_Entities, EntSlots, Entities, EntityCount, _queue_pending, Run_Update_Funcs
 .import LoadScene
+.import ReadInputs
 .importzp args
 .import InitialSceneHeader
 
@@ -54,6 +55,7 @@ _main:
     STA _romBankMirror
     STA Bank_Flags
 
+    JSR ReadInputs
     JSR Run_Update_Funcs
 
     JMP Forever

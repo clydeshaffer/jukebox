@@ -13,6 +13,9 @@ DMA_Color = $4007
 Audio_Reset = $2000
 Audio_Rate = $2006
 
+InputPort1 = $2008
+InputPort2 = $2009
+
 ;For DMA_Flags:
 VFLAG_DMA = 1
 VFLAG_VID_OUT_PAGE2 = 2

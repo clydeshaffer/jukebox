@@ -14,7 +14,7 @@ AFLAGS = --cpu 65C02 --bin-include-dir lib --bin-include-dir $(ODIR)/assets
 LFLAGS = -C gametank-2M.cfg -m $(ODIR)/out.map -vm
 LLIBS = lib/cc65.lib
 
-_AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o system/args.o \
+_AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o system/args.o system/input.o \
 	graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o graphics/loader.o \
 	game/entity.o game/scene.o \
 	testdata/testdata.o
