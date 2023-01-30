@@ -62,7 +62,39 @@
     </rect>
    </property>
    <property name="text">
-    <string>Add Behavior</string>
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="DuplicateBehaviorButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>10</y>
+     <width>80</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RemoveBehaviorButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>10</y>
+     <width>80</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Remove</string>
    </property>
   </widget>
  </widget>

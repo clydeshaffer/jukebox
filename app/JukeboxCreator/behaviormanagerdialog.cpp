@@ -9,6 +9,7 @@ BehaviorManagerDialog::BehaviorManagerDialog(GTProject& project, QWidget *parent
     project(project)
 {
     ui->setupUi(this);
+    ui->listWidget->blockSignals(true);
     ui->tableWidget->blockSignals(true);
     ui->tableWidget->clear();
     ui->tableWidget->setEnabled(false);
@@ -24,6 +25,7 @@ BehaviorManagerDialog::BehaviorManagerDialog(GTProject& project, QWidget *parent
         ui->listWidget->addItem(behavior.name.c_str());
     }
     ui->tableWidget->blockSignals(false);
+    ui->listWidget->blockSignals(false);
 }
 
 BehaviorManagerDialog::~BehaviorManagerDialog()
@@ -58,9 +60,30 @@ void BehaviorManagerDialog::on_listWidget_itemSelectionChanged()
 
         ui->tableWidget->setEnabled(true);
         ui->tableWidget->blockSignals(false);
+
+        ui->DuplicateBehaviorButton->setEnabled(true);
+        ui->RemoveBehaviorButton->setEnabled(true);
+    } else {
+        ui->DuplicateBehaviorButton->setEnabled(false);
+        ui->RemoveBehaviorButton->setEnabled(false);
     }
 }
 
+void BehaviorManagerDialog::on_tableWidget_itemChanged(QTableWidgetItem *item)
+{
+    int selectedBehaviorIndex = ui->listWidget->currentIndex().row();
+    GTBehavior& selectedBehavior = project.behaviors[selectedBehaviorIndex];
+
+    if(item->row() == 0) {
+        selectedBehavior.name = item->data(0).toString().toStdString();
+        ui->listWidget->blockSignals(true);
+        ui->listWidget->item(selectedBehaviorIndex)->setText(item->data(0).toString());
+        ui->listWidget->blockSignals(false);
+    } else {
+        string changedPropName = ui->tableWidget->item(item->row(), 0)->data(0).toString().toStdString();
+        selectedBehavior.params[changedPropName] = std::stoi(item->data(0).toString().toStdString());
+    }
+}
 
 void BehaviorManagerDialog::on_AddBehaviorButton_clicked()
 {
@@ -85,20 +108,32 @@ void BehaviorManagerDialog::on_AddBehaviorButton_clicked()
     ui->listWidget->addItem(project.behaviors.back().name.c_str());
 }
 
-
-void BehaviorManagerDialog::on_tableWidget_itemChanged(QTableWidgetItem *item)
+void BehaviorManagerDialog::on_DuplicateBehaviorButton_clicked()
 {
     int selectedBehaviorIndex = ui->listWidget->currentIndex().row();
     GTBehavior& selectedBehavior = project.behaviors[selectedBehaviorIndex];
-
-    if(item->row() == 0) {
-        selectedBehavior.name = item->data(0).toString().toStdString();
-        ui->listWidget->blockSignals(true);
-        ui->listWidget->item(selectedBehaviorIndex)->setText(item->data(0).toString());
-        ui->listWidget->blockSignals(false);
-    } else {
-        string changedPropName = ui->tableWidget->item(item->row(), 0)->data(0).toString().toStdString();
-        selectedBehavior.params[changedPropName] = std::stoi(item->data(0).toString().toStdString());
-    }
+    project.behaviors.push_back(GTBehavior(selectedBehavior));
+    ui->listWidget->addItem(project.behaviors.back().name.c_str());
 }
 
+
+void BehaviorManagerDialog::on_RemoveBehaviorButton_clicked()
+{
+    int selectedBehaviorIndex = ui->listWidget->currentIndex().row();
+    GTBehavior& selectedBehavior = project.behaviors[selectedBehaviorIndex];
+    ui->listWidget->blockSignals(true);
+    ui->listWidget->takeItem(ui->listWidget->currentRow());
+    for(auto& scene : project.scenes) {
+        for(auto& slot : scene.entitySlots) {
+            if(slot.behavior_id == selectedBehaviorIndex) {
+                slot.behavior_id = -1;
+                slot.behavior = nullptr;
+            } else if(slot.behavior_id > selectedBehaviorIndex) {
+                slot.behavior_id--;
+                slot.behavior = &(project.behaviors[slot.behavior_id]);
+            }
+        }
+    }
+    project.behaviors.erase(project.behaviors.begin()+selectedBehaviorIndex);
+    ui->listWidget->blockSignals(false);
+}

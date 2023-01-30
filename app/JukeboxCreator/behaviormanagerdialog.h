@@ -25,6 +25,10 @@ private slots:
 
     void on_tableWidget_itemChanged(QTableWidgetItem *item);
 
+    void on_DuplicateBehaviorButton_clicked();
+
+    void on_RemoveBehaviorButton_clicked();
+
 private:
     Ui::BehaviorManagerDialog *ui;
     GTProject& project;
