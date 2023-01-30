@@ -9,7 +9,7 @@ BehaviorManagerDialog::BehaviorManagerDialog(GTProject& project, QWidget *parent
     project(project)
 {
     ui->setupUi(this);
-
+    ui->tableWidget->blockSignals(true);
     ui->tableWidget->clear();
     ui->tableWidget->setEnabled(false);
 
@@ -23,6 +23,7 @@ BehaviorManagerDialog::BehaviorManagerDialog(GTProject& project, QWidget *parent
     for(auto& behavior : project.behaviors) {
         ui->listWidget->addItem(behavior.name.c_str());
     }
+    ui->tableWidget->blockSignals(false);
 }
 
 BehaviorManagerDialog::~BehaviorManagerDialog()
@@ -36,9 +37,16 @@ void BehaviorManagerDialog::on_listWidget_itemSelectionChanged()
         int selectedIndex = ui->listWidget->currentIndex().row();
         GTBehavior& selectedBehavior = project.behaviors[selectedIndex];
         int paramCount = selectedBehavior.params.size();
-        ui->tableWidget->setRowCount(paramCount);
+        ui->tableWidget->setRowCount(paramCount+1);
 
-        int row = 0;
+        ui->tableWidget->blockSignals(true);
+
+        QTableWidgetItem* nameCell = new QTableWidgetItem("Name");
+        nameCell->setFlags(nameCell->flags() & ~Qt::ItemIsEditable);
+        QTableWidgetItem* valueCell = new QTableWidgetItem(QString::fromStdString(selectedBehavior.name));
+        ui->tableWidget->setItem(0, 0, nameCell);
+        ui->tableWidget->setItem(0, 1, valueCell);
+        int row = 1;
         for (const auto& item : selectedBehavior.params) {
             QTableWidgetItem* nameCell = new QTableWidgetItem(QString::fromStdString(item.first));
             nameCell->setFlags(nameCell->flags() & ~Qt::ItemIsEditable);
@@ -49,6 +57,7 @@ void BehaviorManagerDialog::on_listWidget_itemSelectionChanged()
         }
 
         ui->tableWidget->setEnabled(true);
+        ui->tableWidget->blockSignals(false);
     }
 }
 
@@ -74,5 +83,22 @@ void BehaviorManagerDialog::on_AddBehaviorButton_clicked()
     path relToProject = filesystem::proximate(path(importedBehaviorPath), project.projectRoot);
     project.behaviors.push_back(GTBehavior(defaultName, relToProject));
     ui->listWidget->addItem(project.behaviors.back().name.c_str());
+}
+
+
+void BehaviorManagerDialog::on_tableWidget_itemChanged(QTableWidgetItem *item)
+{
+    int selectedBehaviorIndex = ui->listWidget->currentIndex().row();
+    GTBehavior& selectedBehavior = project.behaviors[selectedBehaviorIndex];
+
+    if(item->row() == 0) {
+        selectedBehavior.name = item->data(0).toString().toStdString();
+        ui->listWidget->blockSignals(true);
+        ui->listWidget->item(selectedBehaviorIndex)->setText(item->data(0).toString());
+        ui->listWidget->blockSignals(false);
+    } else {
+        string changedPropName = ui->tableWidget->item(item->row(), 0)->data(0).toString().toStdString();
+        selectedBehavior.params[changedPropName] = std::stoi(item->data(0).toString().toStdString());
+    }
 }
 

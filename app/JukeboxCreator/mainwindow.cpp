@@ -378,5 +378,21 @@ void MainWindow::on_actionManage_Behaviors_triggered()
 {
     BehaviorManagerDialog bmd(loadedProject);
     bmd.exec();
+
+    int behaviorIndex = 0;
+    ui->slot_field_updater_combobox->blockSignals(true);
+    ui->slot_field_updater_combobox->clear();
+    ui->slot_field_updater_combobox->addItem("(none)", QVariant::fromValue(-1));
+    for(auto& behavior : loadedProject.behaviors) {
+        ui->slot_field_updater_combobox->addItem(QString::fromStdString(behavior.name), QVariant::fromValue(behaviorIndex));
+        ++behaviorIndex;
+    }
+    if(ui->graphicsView->scene()->selectedItems().length() == 1) {
+        int entIndex = ui->graphicsView->scene()->selectedItems()[0]->data(0).toInt();
+        GTEntity &selectedEnt = currentScene.entities[entIndex];
+        ui->slot_field_updater_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].behavior_id + 1);
+    }
+    ui->slot_field_updater_combobox->blockSignals(false);
+
 }
 

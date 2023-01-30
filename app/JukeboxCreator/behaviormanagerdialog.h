@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include "gtproject.h"
+#include <QTableWidgetItem>
+#include <gtbehavior.h>
 
 namespace Ui {
 class BehaviorManagerDialog;
@@ -20,6 +22,8 @@ private slots:
     void on_listWidget_itemSelectionChanged();
 
     void on_AddBehaviorButton_clicked();
+
+    void on_tableWidget_itemChanged(QTableWidgetItem *item);
 
 private:
     Ui::BehaviorManagerDialog *ui;
