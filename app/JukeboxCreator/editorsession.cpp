@@ -1,5 +1,6 @@
 #include "editorsession.h"
 #include "jsonmacros.h"
+#include <algorithm>
 
 using namespace std;
 using namespace filesystem;

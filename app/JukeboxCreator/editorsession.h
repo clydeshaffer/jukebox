@@ -1,6 +1,7 @@
 #ifndef EDITORSESSION_H
 #define EDITORSESSION_H
 
+#include <vector>
 #include <filesystem>
 #include "jsonbase.h"
 

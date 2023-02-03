@@ -5,6 +5,7 @@
 #include <rapidjson/document.h>
 #include "gtsprite.h"
 #include "jsonmacros.h"
+#include <QDebug>
 
 void GTSprite::loadFramesFromGSI(path framesFile)
 {
@@ -25,6 +26,7 @@ void GTSprite::loadFramesFromJSON(path framesFile)
 
     rapidjson::Document doc;
     doc.Parse(buffer.str().c_str());
+    qDebug() << buffer.str().c_str();
     auto framesJSONArray = doc["frames"].GetArray();
     GTFrame tempFrame;
     for(rapidjson::Value::ConstValueIterator itr = framesJSONArray.Begin(); itr != framesJSONArray.end(); ++itr) {

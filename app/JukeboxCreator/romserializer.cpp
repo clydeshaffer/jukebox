@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include <engine_core.h>
+#include <QDebug>
 
 #include "behaviorcompiler.h"
 
@@ -113,11 +114,15 @@ RomSerializer::RomSerializer(GTProject& myProject)
 
     BehaviorCompiler::PrepareToBuild();
     for(auto& behavior : myProject.behaviors) {
-        behavior.Compile();
+        if(!behavior.Compile()) {
+            qDebug() << "couldn't compile" << behavior.name.c_str();
+        }
     }
     --sprites_bank;
     uint8_t behaviors_bank = sprites_bank;
-    BehaviorCompiler::RunLinker();
+    if(!BehaviorCompiler::RunLinker()) {
+        qDebug() << "couldn't run linker";
+    }
     map<string, int> behaviorsMap = BehaviorCompiler::ParseMap();
     bank_used[behaviors_bank] = true;
 

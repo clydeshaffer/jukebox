@@ -11,16 +11,25 @@
 #include <QDebug>
 #include <cstdlib>
 #include <QProcess>
+#include <QDir>
 
 #include "whereami.h"
 #include "gtproject.h"
+
+#if (defined (_WIN32) || defined (_WIN64))
+#define ASM_EXE "lib/ca65.exe"
+#define LNK_EXE "lib/ld65.exe"
+#else
+#define ASM_EXE "lib/ca65"
+#define LNK_EXE "lib/ld65"
+#endif
 
 std::filesystem::path get_assembler_path() {
     int length = wai_getExecutablePath(nullptr, 0, nullptr);
     char* exePath = (char*)malloc(length + 1);
     wai_getExecutablePath(exePath, length, nullptr);
     exePath[length] = '\0';
-    return std::filesystem::path(exePath).parent_path() / std::filesystem::path("lib/ca65.exe");
+    return std::filesystem::path(exePath).parent_path() / std::filesystem::path("lib/ca65");
 }
 
 std::filesystem::path get_linker_path() {
@@ -28,7 +37,7 @@ std::filesystem::path get_linker_path() {
     char* exePath = (char*)malloc(length + 1);
     wai_getExecutablePath(exePath, length, nullptr);
     exePath[length] = '\0';
-    return std::filesystem::path(exePath).parent_path() / std::filesystem::path("lib/ld65.exe");
+    return std::filesystem::path(exePath).parent_path() / std::filesystem::path("lib/ld65");
 }
 
 
@@ -42,14 +51,21 @@ bool run_process(const std::filesystem::path &executable, const std::vector<std:
     QProcess proc;
     proc.start(executable.string().c_str(), qargs);
     if(!proc.waitForStarted()) {
+        qDebug() << "could not start" << executable.filename().string().c_str();
         return false;
     }
 
     if(!proc.waitForFinished()) {
+        qDebug() << "waitForFinished failed on" << executable.filename().string().c_str();
         return false;
     }
 
+    qDebug() << proc.readAll();
     qDebug() << proc.readAllStandardError();
+
+    if(proc.exitCode()) {
+        qDebug() << "failed exit code" << proc.exitCode();
+    }
 
     return !proc.exitCode();
 }
@@ -94,8 +110,15 @@ bool BehaviorCompiler::RunLinker()
     wai_getExecutablePath(exePath, length, nullptr);
     exePath[length] = '\0';
 
+    QDir objectsDir((GTProject::loadedProject->projectRoot / path("build")).string().c_str());
+    QStringList filters = {"*.o"};
+    QStringList filtered = objectsDir.entryList(filters);
+
     std::vector<std::string> args;
-    args.push_back((GTProject::loadedProject->projectRoot / path("build") / path("*.o")).string());
+
+    for(auto& objPath : filtered) {
+        args.push_back((GTProject::loadedProject->projectRoot / path("build") / path(objPath.toStdString())).string());
+    }
     args.push_back("-m");
     args.push_back((GTProject::loadedProject->projectRoot / path("build/out.map")).string());
     args.push_back("-vm");

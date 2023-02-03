@@ -3,7 +3,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
 #include <string>
-#include "JSONBase.h"
+#include "jsonbase.h"
 #include <fstream>
 #include <sstream>
 #include <filesystem>
