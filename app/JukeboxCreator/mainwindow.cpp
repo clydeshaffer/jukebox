@@ -44,7 +44,7 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
     QObject::connect(ui->ent_field_state, &QSpinBox::valueChanged, this, &MainWindow::item_properties_edited);
 
     QObject::connect(ui->slot_field_sprite_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
-    QObject::connect(ui->slot_field_updater_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_properties_edited);
+    QObject::connect(ui->slot_field_updater_combobox, &QComboBox::currentIndexChanged, this, &MainWindow::slot_added_behavior);
     QObject::connect(ui->slot_field_type, &QSpinBox::valueChanged, this, &MainWindow::slot_properties_edited);
 
     QObject::connect(ui->graphicsView->createAction, &QAction::triggered, this, &MainWindow::on_contextmenu_create);
@@ -74,12 +74,6 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
                 break;
             }
             ++spriteIndex;
-        }
-
-        if(slot_itr->behavior_id != -1) {
-            slot_itr->behavior = &(loadedProject.behaviors[slot_itr->behavior_id]);
-        } else {
-            slot_itr->behavior = nullptr;
         }
 
         ui->ent_field_slot->addItem(makeSlotLabel(slotIndex, (*slot_itr).sprite_name), QVariant::fromValue(slotIndex));
@@ -197,7 +191,7 @@ void MainWindow::item_selection_changed()
         ui->ent_field_state->setValue(selectedEnt.state);
 
         ui->slot_field_sprite_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].sprite_id);
-        ui->slot_field_updater_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].behavior_id + 1); //+1 because the first item NOP is id -1
+        ui->slot_field_behaviors->setModel(currentScene.entitySlots[selectedEnt.slot].behaviors);
         ui->slot_field_type->setValue(currentScene.entitySlots[selectedEnt.slot].type);
 
         ui->ent_field_x->blockSignals(false);
@@ -267,19 +261,28 @@ void MainWindow::slot_properties_edited()
         selectedSlot.sprite_name = loadedProject.sprites[selectedSlot.sprite_id].name;
         ui->ent_field_slot->setItemText(changedSlot, makeSlotLabel(changedSlot, currentScene.entitySlots[changedSlot].sprite_name));
 
-        selectedSlot.behavior_id = ui->slot_field_updater_combobox->currentIndex()-1;
-        if(selectedSlot.behavior_id == -1) {
-            selectedSlot.behavior = nullptr;
-        } else {
-            selectedSlot.behavior = &loadedProject.behaviors[selectedSlot.behavior_id];
-        }
-
         selectedSlot.type = ui->slot_field_type->value();
 
         for(auto& ent : currentScene.entities) {
             if(ent.slot == changedSlot) {
                 UpdateEntityView(ent);
             }
+        }
+    }
+}
+
+void MainWindow::slot_added_behavior()
+{
+    if(ui->graphicsView->scene()->selectedItems().length() == 1) {
+        int selectedBehavior = ui->slot_field_updater_combobox->currentIndex();
+        if(selectedBehavior > 0) {
+            int entIndex = ui->graphicsView->scene()->selectedItems()[0]->data(0).toInt();
+            GTEntity &selectedEnt = currentScene.entities[entIndex];
+            int changedSlot = selectedEnt.slot;
+            GTEntitySlot &selectedSlot = currentScene.entitySlots[changedSlot];
+            selectedSlot.behaviors->push_back(&(loadedProject.behaviors[selectedBehavior - 1]));
+
+            ui->slot_field_updater_combobox->setCurrentIndex(0);
         }
     }
 }
@@ -390,7 +393,7 @@ void MainWindow::on_actionManage_Behaviors_triggered()
     if(ui->graphicsView->scene()->selectedItems().length() == 1) {
         int entIndex = ui->graphicsView->scene()->selectedItems()[0]->data(0).toInt();
         GTEntity &selectedEnt = currentScene.entities[entIndex];
-        ui->slot_field_updater_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].behavior_id + 1);
+        ui->slot_field_behaviors->setModel(currentScene.entitySlots[selectedEnt.slot].behaviors);
     }
     ui->slot_field_updater_combobox->blockSignals(false);
 

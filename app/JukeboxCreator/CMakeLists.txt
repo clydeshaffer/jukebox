@@ -38,6 +38,8 @@ set(PROJECT_SOURCES
         sceneeditorview.h sceneeditorview.cpp
         behaviorcompiler.h behaviorcompiler.cpp
         behaviormanagerdialog.h behaviormanagerdialog.cpp behaviormanagerdialog.ui
+        behaviorslistmodel.h behaviorslistmodel.cpp
+        assemblyunit.h assemblyunit.cpp
         ${TS_FILES}
 )
 

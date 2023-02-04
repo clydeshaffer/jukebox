@@ -23,6 +23,7 @@ private slots:
     void item_selection_changed();
     void item_properties_edited();
     void slot_properties_edited();
+    void slot_added_behavior();
 
     void on_pushButton_clicked();
 

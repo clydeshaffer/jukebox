@@ -114,8 +114,13 @@ RomSerializer::RomSerializer(GTProject& myProject)
 
     BehaviorCompiler::PrepareToBuild();
     for(auto& behavior : myProject.behaviors) {
-        if(!behavior.Compile()) {
+        if(!behavior.Compile(myProject.projectRoot)) {
             qDebug() << "couldn't compile" << behavior.name.c_str();
+        }
+    }
+    for(auto& scene : myProject.scenes) {
+        for(auto& slot : scene.entitySlots) {
+            slot.behaviors->Compile(myProject.projectRoot);
         }
     }
     --sprites_bank;
@@ -168,13 +173,12 @@ RomSerializer::RomSerializer(GTProject& myProject)
             scene_slots.frame_table_addr_lsb[slot_index] = frame_data_offsets[entslot.sprite_id] & 0x00FF;
             scene_slots.frame_table_bank[slot_index] = frame_data_banks[entslot.sprite_id];
 
-            //TEMPORARY SET ALL UPDATERS TO NO-OP
-            if(entslot.behavior_id == -1) {
+            if(entslot.behaviors->rowCount() == 0) {
                 scene_slots.updater_addr_msb[slot_index] = 0x80;
                 scene_slots.updater_addr_lsb[slot_index] = sizeof(scene_header); //assuming RTS placed right after scene header
                 scene_slots.updater_bank[slot_index] = 0x80;
             } else {
-                uint16_t updater_addr = behaviorsMap[entslot.behavior->GenName()];
+                uint16_t updater_addr = behaviorsMap[entslot.behaviors->GenName()];
                 scene_slots.updater_addr_msb[slot_index] = (updater_addr & 0xFF00) >> 8;
                 scene_slots.updater_addr_lsb[slot_index] = updater_addr & 0x00FF;
                 scene_slots.updater_bank[slot_index] = behaviors_bank;

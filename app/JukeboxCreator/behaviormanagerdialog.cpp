@@ -125,13 +125,7 @@ void BehaviorManagerDialog::on_RemoveBehaviorButton_clicked()
     ui->listWidget->takeItem(ui->listWidget->currentRow());
     for(auto& scene : project.scenes) {
         for(auto& slot : scene.entitySlots) {
-            if(slot.behavior_id == selectedBehaviorIndex) {
-                slot.behavior_id = -1;
-                slot.behavior = nullptr;
-            } else if(slot.behavior_id > selectedBehaviorIndex) {
-                slot.behavior_id--;
-                slot.behavior = &(project.behaviors[slot.behavior_id]);
-            }
+            slot.behaviors->removeAll(&selectedBehavior);
         }
     }
     project.behaviors.erase(project.behaviors.begin()+selectedBehaviorIndex);

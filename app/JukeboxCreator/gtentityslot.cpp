@@ -3,13 +3,15 @@
 
 GTEntitySlot::GTEntitySlot()
 {
-    behavior_id = -1;
+    behaviors = new BehaviorsListModel();
 }
 
 bool GTEntitySlot::Deserialize(const rapidjson::Value& obj)
 {
     JSON_READ(String, sprite_name);
-    JSON_READ(Int, behavior_id);
+
+    behaviors->Deserialize(obj["behaviors"]);
+
     JSON_READ(Int, type);
     return true;
 }
@@ -18,7 +20,10 @@ bool GTEntitySlot::Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer)
 {
     writer->StartObject();
     JSON_EMIT_STRING(sprite_name);
-    JSON_EMIT(Int, behavior_id);
+
+    writer->String("behaviors");
+    behaviors->Serialize(writer);
+
     JSON_EMIT(Int, type);
     writer->EndObject();
     return true;

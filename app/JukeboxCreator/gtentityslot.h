@@ -2,7 +2,7 @@
 #define GTENTITYSLOT_H
 
 #include "jsonbase.h"
-#include "gtbehavior.h"
+#include "behaviorslistmodel.h"
 
 class GTEntitySlot : JSONBase
 {
@@ -15,8 +15,7 @@ public:
     unsigned char sprite_id;
     std::string sprite_name;
 
-    int behavior_id = 0;
-    GTBehavior *behavior;
+    BehaviorsListModel* behaviors;
 
     unsigned char type = 0;
 };

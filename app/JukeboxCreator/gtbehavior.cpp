@@ -149,12 +149,3 @@ std::string GTBehavior::GetCode(path root)
 
     return fileContent;
 }
-
-bool GTBehavior::Compile()
-{
-    path genFile = GTProject::loadedProject->projectRoot / path("build") / path(GenName() + ".asm");
-    std::ofstream genCode(genFile);
-    genCode << GetCode(GTProject::loadedProject->projectRoot);
-    genCode.close();
-    return BehaviorCompiler::RunAssembler(genFile);
-}

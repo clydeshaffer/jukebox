@@ -19,6 +19,7 @@ public:
     virtual bool Serialize(rapidjson::Writer<rapidjson::StringBuffer>* writer) const = 0;
 
     static std::filesystem::path homeDir;
+    int cached_index;
 protected:
     bool InitDocument(const std::string & s, rapidjson::Document &doc);
 };
