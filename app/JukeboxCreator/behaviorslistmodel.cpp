@@ -132,6 +132,8 @@ std::string BehaviorsListModel::GetCode(std::filesystem::path root)
     outCode += GenName();
     outCode += ":\n";
 
+    outCode += "\tLDA #1\n";
+
     for(auto& behavior : behaviors) {
         outCode += "\tJSR ";
         outCode += behavior.ptr->GenName();

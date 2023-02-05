@@ -4,6 +4,7 @@
 .import ShiftROMBank, bankFlip
 .export EntityCount, Entities, EntSlots
 .export Draw_All_Entities, FrameDataPtr, Run_Update_Funcs
+.export scratch
 
 .include "../graphics/rect.inc"
 .include "../system/regs.inc"
@@ -13,6 +14,8 @@
 .segment "ZEROPAGE"
 FrameDataPtr:
     .res 2
+scratch: ;scratch space to use for updaters
+    .res 8
 .segment "BSS"
 Entities:
     .TAG Entity
@@ -93,6 +96,7 @@ EntYOffset:
 
     LDA EntGRAMBank
     ORA bankFlip
+    ORA #%00110000
     STA _render_queue_input+Rect::bank
 
     LDA #VFLAG_NOTILE

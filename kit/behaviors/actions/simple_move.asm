@@ -8,6 +8,9 @@ y_increment = 0
 .export UPDATE_START
 
 UPDATE_START:
+    bne :+
+    rts
+:
     lda ENTITIES::vX, x
     clc
     adc #x_increment
@@ -17,4 +20,6 @@ UPDATE_START:
     clc
     adc #y_increment
     sta ENTITIES::vY, x
+
+    lda #1
     rts

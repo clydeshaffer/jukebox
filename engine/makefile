@@ -17,6 +17,7 @@ LLIBS = lib/cc65.lib
 _AOBJS = system/boot.o system/banking.o system/main.o system/vectors.o system/args.o system/input.o \
 	graphics/renderqueue.o graphics/vsync.o graphics/vidctrl.o graphics/loader.o \
 	game/entity.o game/scene.o \
+	util/math.o \
 	testdata/testdata.o
 AOBJS = $(patsubst %,$(ODIR)/%,$(_AOBJS))
 

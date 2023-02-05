@@ -18,6 +18,9 @@ INPUT_MASK_RIGHT	= %00000001
 .export UPDATE_START
 
 UPDATE_START:
+    bne :+
+    rts
+:
     lda inputsrc
     and #INPUT_MASK_RIGHT
     beq :+
@@ -38,4 +41,5 @@ UPDATE_START:
     beq :+
     dec ENTITIES::vY, x
 :
+    lda #1
     rts

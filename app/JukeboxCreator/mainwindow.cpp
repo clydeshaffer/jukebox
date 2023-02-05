@@ -156,6 +156,7 @@ void MainWindow::on_actionImport_Sprite_triggered()
 void MainWindow::item_selection_changed()
 {
     if(ui->graphicsView->scene()->selectedItems().length() == 1) {
+
         ui->ent_field_x->setEnabled(true);
         ui->ent_field_y->setEnabled(true);
         ui->ent_field_hp->setEnabled(true);
@@ -169,6 +170,8 @@ void MainWindow::item_selection_changed()
         selectedEnt.vy = selection->y() / 4;
         selection->setX(selectedEnt.vx * 4);
         selection->setY(selectedEnt.vy * 4);
+
+        ui->statusbar->showMessage(QString("Entity index %1 selected").arg(QString::number(entIndex)));
 
         ui->ent_field_x->blockSignals(true);
         ui->ent_field_y->blockSignals(true);
@@ -215,6 +218,9 @@ void MainWindow::item_selection_changed()
         ui->ent_field_frame->setEnabled(false);
         ui->ent_field_slot->setEnabled(false);
         ui->ent_field_state->setEnabled(false);
+
+        ui->statusbar->showMessage("None selected");
+
 
         ui->slot_field_type->setEnabled(false);
         ui->slot_field_sprite_combobox->setEnabled(false);

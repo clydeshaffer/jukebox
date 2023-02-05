@@ -1,6 +1,7 @@
 /*core_symbols.h - contains exported memory offsets from JukeboxGT engine*/
 #ifndef CORE_SYMBOLS_H
 #define CORE_SYMBOLS_H
+#define CORESYMBOL_AbsVal 0x00C5BE
 #define CORESYMBOL_Draw_All_Entities 0x00C313
 #define CORESYMBOL_EntSlots 0x0002F7
 #define CORESYMBOL_Entities 0x000237
@@ -9,10 +10,10 @@
 #define CORESYMBOL_Init_Draw_Queue 0x00C1B8
 #define CORESYMBOL_Init_RAM_Page_Numbers 0x00C031
 #define CORESYMBOL_InitialSceneHeader 0x008000
-#define CORESYMBOL_LoadScene 0x00C3C4
+#define CORESYMBOL_LoadScene 0x00C3C6
 #define CORESYMBOL_LoadSpriteSheet 0x00C2A9
 #define CORESYMBOL_ReadInputs 0x00C17C
-#define CORESYMBOL_Run_Update_Funcs 0x00C39C
+#define CORESYMBOL_Run_Update_Funcs 0x00C39E
 #define CORESYMBOL_Setup_VIA_Port_A 0x00C045
 #define CORESYMBOL_ShiftROMBank 0x00C050
 #define CORESYMBOL_WaitForVSync 0x00C29E
@@ -29,12 +30,12 @@
 #define CORESYMBOL___BSS_RUN__ 0x000225
 #define CORESYMBOL___BSS_SIZE__ 0x0004F3
 #define CORESYMBOL___CONSTRUCTOR_COUNT__ 0x000000
-#define CORESYMBOL___CONSTRUCTOR_TABLE__ 0x00C87D
+#define CORESYMBOL___CONSTRUCTOR_TABLE__ 0x00C888
 #define CORESYMBOL___DATA_LOAD__ 0x00C000
 #define CORESYMBOL___DATA_RUN__ 0x000200
 #define CORESYMBOL___DATA_SIZE__ 0x000025
 #define CORESYMBOL___DESTRUCTOR_COUNT__ 0x000000
-#define CORESYMBOL___DESTRUCTOR_TABLE__ 0x00C87D
+#define CORESYMBOL___DESTRUCTOR_TABLE__ 0x00C888
 #define CORESYMBOL___DRAWQ_LOAD__ 0x000200
 #define CORESYMBOL___DRAWQ_RUN__ 0x000200
 #define CORESYMBOL___DRAWQ_SIZE__ 0x000900
@@ -56,17 +57,17 @@
 #define CORESYMBOL___STARTUP__ 0x000001
 #define CORESYMBOL___ZEROPAGE_LOAD__ 0x000000
 #define CORESYMBOL___ZEROPAGE_RUN__ 0x000000
-#define CORESYMBOL___ZEROPAGE_SIZE__ 0x000027
+#define CORESYMBOL___ZEROPAGE_SIZE__ 0x00002F
 #define CORESYMBOL___ZP0_FILEOFFS__ 0x000000
-#define CORESYMBOL___ZP0_LAST__ 0x000027
+#define CORESYMBOL___ZP0_LAST__ 0x00002F
 #define CORESYMBOL___ZP0_SIZE__ 0x000100
 #define CORESYMBOL___ZP0_START__ 0x000000
 #define CORESYMBOL__banksMirror 0x000226
 #define CORESYMBOL__flagsMirror 0x000235
 #define CORESYMBOL__frameflag 0x000234
 #define CORESYMBOL__frameflip 0x000236
-#define CORESYMBOL__inflatemem 0x00C60B
-#define CORESYMBOL__init 0x00C845
+#define CORESYMBOL__inflatemem 0x00C616
+#define CORESYMBOL__init 0x00C850
 #define CORESYMBOL__irq_int_check_render_queue 0x00C27B
 #define CORESYMBOL__main 0x00C0F1
 #define CORESYMBOL__nmi_int_set_frameflag 0x00C293
@@ -78,9 +79,9 @@
 #define CORESYMBOL_args 0x000001
 #define CORESYMBOL_bankFlip 0x000227
 #define CORESYMBOL_condes 0x000200
-#define CORESYMBOL_copydata 0x00C5C8
-#define CORESYMBOL_donelib 0x00C5BC
-#define CORESYMBOL_incsp2 0x00C5FD
+#define CORESYMBOL_copydata 0x00C5D3
+#define CORESYMBOL_donelib 0x00C5C7
+#define CORESYMBOL_incsp2 0x00C608
 #define CORESYMBOL_initlib 0x00C025
 #define CORESYMBOL_inputsP1A 0x000228
 #define CORESYMBOL_inputsP1A_old 0x00022C
@@ -90,19 +91,20 @@
 #define CORESYMBOL_inputsP2A_old 0x00022E
 #define CORESYMBOL_inputsP2B 0x00022B
 #define CORESYMBOL_inputsP2B_old 0x00022F
-#define CORESYMBOL_popax 0x00C5F5
-#define CORESYMBOL_ptr1 0x000015
-#define CORESYMBOL_ptr2 0x000017
-#define CORESYMBOL_ptr3 0x000019
-#define CORESYMBOL_ptr4 0x00001B
-#define CORESYMBOL_regbank 0x000021
-#define CORESYMBOL_regsave 0x000011
-#define CORESYMBOL_sp 0x00000D
-#define CORESYMBOL_sreg 0x00000F
-#define CORESYMBOL_tmp1 0x00001D
-#define CORESYMBOL_tmp2 0x00001E
-#define CORESYMBOL_tmp3 0x00001F
-#define CORESYMBOL_tmp4 0x000020
+#define CORESYMBOL_popax 0x00C600
+#define CORESYMBOL_ptr1 0x00001D
+#define CORESYMBOL_ptr2 0x00001F
+#define CORESYMBOL_ptr3 0x000021
+#define CORESYMBOL_ptr4 0x000023
+#define CORESYMBOL_regbank 0x000029
+#define CORESYMBOL_regsave 0x000019
+#define CORESYMBOL_scratch 0x00000D
+#define CORESYMBOL_sp 0x000015
+#define CORESYMBOL_sreg 0x000017
+#define CORESYMBOL_tmp1 0x000025
+#define CORESYMBOL_tmp2 0x000026
+#define CORESYMBOL_tmp3 0x000027
+#define CORESYMBOL_tmp4 0x000028
 #define CORESYMBOL_tmp_ptr 0x000009
-#define CORESYMBOL_zerobss 0x00C802
+#define CORESYMBOL_zerobss 0x00C80D
 #endif
