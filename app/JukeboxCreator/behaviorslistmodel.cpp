@@ -31,6 +31,8 @@ QVariant BehaviorsListModel::data(const QModelIndex &index, int role) const
         return QString::fromStdString(behaviors[index.row()].ptr->name);
     } else if(role == Qt::ToolTipRole) {
         return QString::fromStdString(behaviors[index.row()].ptr->source.string());
+    } else if(role == Qt::EditRole) {
+        return QString::fromStdString(behaviors[index.row()].uid);
     }
     return QVariant();
 
@@ -38,7 +40,7 @@ QVariant BehaviorsListModel::data(const QModelIndex &index, int role) const
 
 bool BehaviorsListModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    beginInsertRows(parent, row, row+count);
+    beginInsertRows(parent, row, row+count-1);
     for(int i = 0; i < count; ++i) {
         behaviors.insert(behaviors.begin()+row, {"", nullptr});
     }
@@ -48,7 +50,7 @@ bool BehaviorsListModel::insertRows(int row, int count, const QModelIndex &paren
 
 bool BehaviorsListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    beginRemoveRows(parent, row, row+count);
+    beginRemoveRows(parent, row, row+count-1);
     behaviors.erase(behaviors.begin()+row, behaviors.begin()+row+count);
     endRemoveRows();
     return true;
@@ -56,7 +58,28 @@ bool BehaviorsListModel::removeRows(int row, int count, const QModelIndex &paren
 
 bool BehaviorsListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    if(role == Qt::EditRole) {
+        std::string newUID = value.toString().toStdString();
+        behaviors[index.row()].uid = newUID;
+        behaviors[index.row()].ptr = GTBehavior::find(newUID);
+    }
     return true;
+}
+
+Qt::ItemFlags BehaviorsListModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags defaultFlags = QAbstractListModel::flags(index);
+
+    if (index.isValid())
+        return Qt::ItemIsDragEnabled | defaultFlags;
+    else
+        return Qt::ItemIsDropEnabled | defaultFlags;
+
+}
+
+Qt::DropActions BehaviorsListModel::supportedDropActions() const
+{
+    return Qt::MoveAction;
 }
 
 bool BehaviorsListModel::Deserialize(const rapidjson::Value& obj)

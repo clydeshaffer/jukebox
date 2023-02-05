@@ -193,6 +193,10 @@ void MainWindow::item_selection_changed()
         ui->slot_field_sprite_combobox->setCurrentIndex(currentScene.entitySlots[selectedEnt.slot].sprite_id);
         ui->slot_field_behaviors->setModel(currentScene.entitySlots[selectedEnt.slot].behaviors);
         ui->slot_field_type->setValue(currentScene.entitySlots[selectedEnt.slot].type);
+        ui->slot_field_type->setEnabled(true);
+        ui->slot_field_sprite_combobox->setEnabled(true);
+        ui->slot_field_behaviors->setEnabled(true);
+        ui->slot_field_updater_combobox->setEnabled(true);
 
         ui->ent_field_x->blockSignals(false);
         ui->ent_field_y->blockSignals(false);
@@ -211,6 +215,12 @@ void MainWindow::item_selection_changed()
         ui->ent_field_frame->setEnabled(false);
         ui->ent_field_slot->setEnabled(false);
         ui->ent_field_state->setEnabled(false);
+
+        ui->slot_field_type->setEnabled(false);
+        ui->slot_field_sprite_combobox->setEnabled(false);
+        ui->slot_field_behaviors->setEnabled(false);
+        ui->slot_field_updater_combobox->setEnabled(false);
+        ui->slot_field_behaviors->setModel(nullptr);
     }
 }
 
