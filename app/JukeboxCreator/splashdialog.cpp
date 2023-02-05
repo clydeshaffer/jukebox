@@ -70,3 +70,8 @@ void SplashDialog::on_recentProjectsList_itemDoubleClicked(QListWidgetItem *item
     accept();
 }
 
+
+void SplashDialog::on_SplashDialog_rejected()
+{
+}
+

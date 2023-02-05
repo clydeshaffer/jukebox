@@ -35,6 +35,8 @@ private slots:
 
     void on_recentProjectsList_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_SplashDialog_rejected();
+
 private:
     Ui::SplashDialog *ui;
 
