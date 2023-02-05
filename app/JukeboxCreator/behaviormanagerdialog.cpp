@@ -106,6 +106,11 @@ void BehaviorManagerDialog::on_AddBehaviorButton_clicked()
     path relToProject = filesystem::proximate(path(importedBehaviorPath), project.projectRoot);
     project.behaviors.push_back(GTBehavior(defaultName, relToProject));
     ui->listWidget->addItem(project.behaviors.back().name.c_str());
+    for(auto& scene : project.scenes) {
+        for(auto& slot : scene.entitySlots) {
+            slot.behaviors->fixLinks();
+        }
+    }
 }
 
 void BehaviorManagerDialog::on_DuplicateBehaviorButton_clicked()
@@ -113,7 +118,13 @@ void BehaviorManagerDialog::on_DuplicateBehaviorButton_clicked()
     int selectedBehaviorIndex = ui->listWidget->currentIndex().row();
     GTBehavior& selectedBehavior = project.behaviors[selectedBehaviorIndex];
     project.behaviors.push_back(GTBehavior(selectedBehavior));
+    project.behaviors.back().regenUID();
     ui->listWidget->addItem(project.behaviors.back().name.c_str());
+    for(auto& scene : project.scenes) {
+        for(auto& slot : scene.entitySlots) {
+            slot.behaviors->fixLinks();
+        }
+    }
 }
 
 
@@ -125,9 +136,14 @@ void BehaviorManagerDialog::on_RemoveBehaviorButton_clicked()
     ui->listWidget->takeItem(ui->listWidget->currentRow());
     for(auto& scene : project.scenes) {
         for(auto& slot : scene.entitySlots) {
-            slot.behaviors->removeAll(&selectedBehavior);
+            slot.behaviors->removeAll(selectedBehavior.uid);
         }
     }
     project.behaviors.erase(project.behaviors.begin()+selectedBehaviorIndex);
+    for(auto& scene : project.scenes) {
+        for(auto& slot : scene.entitySlots) {
+            slot.behaviors->fixLinks();
+        }
+    }
     ui->listWidget->blockSignals(false);
 }

@@ -29,6 +29,9 @@
         <height>640</height>
        </size>
       </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
@@ -185,7 +188,11 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QListView" name="slot_field_behaviors"/>
+           <widget class="BehaviorListView" name="slot_field_behaviors">
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+           </widget>
           </item>
           <item row="3" column="1">
            <widget class="QComboBox" name="slot_field_updater_combobox"/>
@@ -257,6 +264,11 @@
    <class>SceneEditorView</class>
    <extends>QGraphicsView</extends>
    <header location="global">sceneeditorview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BehaviorListView</class>
+   <extends>QListView</extends>
+   <header>behaviorlistview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

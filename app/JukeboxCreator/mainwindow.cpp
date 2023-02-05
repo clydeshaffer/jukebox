@@ -60,7 +60,7 @@ MainWindow::MainWindow(GTProject& project, QWidget *parent)
     }
 
 
-    ui->slot_field_updater_combobox->addItem("(none)", QVariant::fromValue(-1));
+    ui->slot_field_updater_combobox->addItem("Add a behavior...", QVariant::fromValue(-1));
     for(auto& behavior : loadedProject.behaviors) {
         ui->slot_field_updater_combobox->addItem(QString::fromStdString(behavior.name), QVariant::fromValue(behaviorIndex));
         ++behaviorIndex;
@@ -385,7 +385,7 @@ void MainWindow::on_actionManage_Behaviors_triggered()
     int behaviorIndex = 0;
     ui->slot_field_updater_combobox->blockSignals(true);
     ui->slot_field_updater_combobox->clear();
-    ui->slot_field_updater_combobox->addItem("(none)", QVariant::fromValue(-1));
+    ui->slot_field_updater_combobox->addItem("Add a behavior...", QVariant::fromValue(-1));
     for(auto& behavior : loadedProject.behaviors) {
         ui->slot_field_updater_combobox->addItem(QString::fromStdString(behavior.name), QVariant::fromValue(behaviorIndex));
         ++behaviorIndex;

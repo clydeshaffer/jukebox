@@ -39,6 +39,7 @@ set(PROJECT_SOURCES
         behaviorcompiler.h behaviorcompiler.cpp
         behaviormanagerdialog.h behaviormanagerdialog.cpp behaviormanagerdialog.ui
         behaviorslistmodel.h behaviorslistmodel.cpp
+        behaviorlistview.h behaviorlistview.cpp
         assemblyunit.h assemblyunit.cpp
         ${TS_FILES}
 )
