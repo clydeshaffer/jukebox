@@ -10,6 +10,7 @@
 class JSONBase
 {
 public:
+    static std::string NormalizePathString(std::string rawPath);
     bool DeserializeFromFile(const std::string& filePath);
     bool SerializeToFile(const std::string& filePath);
 

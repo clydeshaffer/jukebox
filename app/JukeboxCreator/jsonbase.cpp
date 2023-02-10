@@ -7,8 +7,18 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <algorithm>
 
 std::filesystem::path JSONBase::homeDir;
+
+std::string JSONBase::NormalizePathString(std::string rawPath)
+{
+    #if !((defined (_WIN32) || defined (_WIN64)))
+    std::string s = rawPath;
+    std::replace(s.begin(), s.end(), '\\', '/');
+    #endif
+    return s;
+}
 
 std::string JSONBase::Serialize() const
 {
