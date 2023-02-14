@@ -6,6 +6,7 @@
 .import ReadInputs
 .importzp args
 .import InitialSceneHeader
+.importzp globalTick
 
 .PC02
 
@@ -38,6 +39,8 @@ _main:
     JSR LoadScene
     CLI
 
+    STZ globalTick
+
     Forever:
     JSR ClearScreen
     JSR Draw_All_Entities
@@ -57,6 +60,7 @@ _main:
 
     JSR ReadInputs
     JSR Run_Update_Funcs
+    INC globalTick
 
     JMP Forever
 
